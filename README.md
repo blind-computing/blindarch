@@ -33,7 +33,7 @@ It's as easy as that!
 ## Miscellaneous Notes
 
 Most of the modifications made to the blindarch iso are confined to the airootfs subdirectory.
-A couple of packages were also added to the package list to add support for vmware.
+A couple of packages were also added to the package list to add support for virtual box.
 Some other modifications include larger text for those with low vision and the default being set to the espeak by default.
 
 ## Thanks
