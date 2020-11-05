@@ -14,18 +14,18 @@ You should update this package regularly, to keep abreast of upstream changes.
 I encourage you to read archiso's Wiki before proceeding.  You can find that document [here](https://wiki.archlinux.org/index.php/Archiso).
 
 
-so execute the following to clone this repo their:
+To begin, execute the following to clone the repo and enter the directory:
 
 git clone https://github.com/blind-computing/blindarch.git ~/blindarch && cd ~/blindarch
 
-Building the iso through the mkarchiso script needs to be run as sudo.
+When building the iso, the mkarchiso script needs to be run as root (generally using sudo).
 Two folders will be created in the directory, one is work, and the other out.
 This can be changed (please read the wiki for details).
 It is important not to stop the build or folders can be mounted and locked (please read the wiki for details).
 
 The command to build will be:
 
-mkarchiso -v ~/blindarch 
+sudo mkarchiso -v ~/blindarch 
 
 It's as easy as that!
 
