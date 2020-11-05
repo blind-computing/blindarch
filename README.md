@@ -1,7 +1,10 @@
 # BlindArch
 
 BlindArch is a project based on [Talking Arch](http://talkingarch.info) to create an ArchLinux install CD for blind and visually impaired users. It also offers an easy to use installer to allow users to set up a completely accessible and customisable arch linux installation.
-You can download the image from the [Blind Computing download page](https://blindcomputing.org/downloads/blindarch).
+You can download the image from the [Blind Computing download page](https://onlinemarketspecialist.com/blindarch/BlindArch-2020.11.04-x86_64.iso).
+
+NOTE: The listed address is a temporary placeholder until the ISO can be sent up to the BC server.
+
 If you just want a CD image, you can stop reading here!
 The rest of this document is only useful for those who want to build their own images.
 
