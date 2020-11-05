@@ -11,8 +11,7 @@ BlindArch is built using the [archiso scripts](https://wiki.archlinux.org/index.
 
 You will find archiso [here](https://www.archlinux.org/packages/extra/any/archiso/).
 You should update this package regularly, to keep abreast of upstream changes.
-I encourage you to read archiso's README before proceeding.  You can find that document at
-**/usr/share/doc/archiso/README.**
+I encourage you to read archiso's Wiki before proceeding.  You can find that document [here](https://wiki.archlinux.org/index.php/Archiso).
 
 
 so execute the following to clone this repo their:
