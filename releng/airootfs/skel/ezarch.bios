@@ -29,14 +29,14 @@ welcome () {
  echo -e " \n"
  sleep 4
 }
-#
+# this uses the API to pull timezone - should be okay
 #
 hrdclck () {
   clear
   timedatectl set-ntp true
   MYTMZ="$(curl -s https://ipapi.co/timezone)"
 }
-#
+# this uses API to pull language /  country, maybe add a case command for language?
 #
 localestg () {
   clear
