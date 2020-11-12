@@ -1,7 +1,7 @@
 # TEST BRANCH FOR BlindArch
 
 ## This test branch adds experimental support from the EZARCH scripting system by Eznik.
-## This version is heavily customized to assit blind users in a quick and basic install.
+## This version is heavily customized to assist blind users in a quick and basic install.
 For information on EZARCH, please visit the [main page on Sourceforge](https://sourceforge.net/projects/ezarch/)
 
 BlindArch is a project based on [Talking Arch](http://talkingarch.info) to create an ArchLinux install CD for blind and visually impaired users. It also offers an easy to use installer to allow users to set up a completely accessible and customisable arch linux installation.
