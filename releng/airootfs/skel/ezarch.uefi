@@ -190,6 +190,8 @@ trgtdrvnv () {
   clear
 }
 #
+# https://linux.die.net/man/8/sgdisk
+# A start or end value of 0 specifies the default value, which is the start of the largest available block for the start sector and the end of the same block for the end sector. A partnum value of 0 causes the program to use the first available partition number. 
 #
 mkpartsd () {
   clear
