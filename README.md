@@ -3,7 +3,7 @@
 # WARNING
 # This version is under development.  DO NOT USE THIS unless you are working with us on testing. USE OF THIS VERSION MAY RESULT IN DATA LOSS
 
-## This test branch adds an experimental install script based on the EZARCH scripting system by Eznik.
+## This test branch adds an experimental install script based on the EZARCH scripting system by Eznix.
 ## This version is heavily customized to assist blind users in a quick and basic install.
 For information on EZARCH, please visit the [main page on Sourceforge](https://sourceforge.net/projects/ezarch/)
 
