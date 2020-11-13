@@ -519,7 +519,8 @@ instmate () {
   sleep 2
   arch-chroot /mnt systemctl enable lightdm.service
   arch-chroot /mnt gsettings set org.mate.interface accessibility true
-  clear
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  echo "light dm services and config pushed"
   echo -e "\n"
   echo "Mate desktop installation complete"
   sleep 20
@@ -537,10 +538,13 @@ insti3 () {
   sleep 5
   clear
   echo "pushing custom config files for i3"
-  mkdir /mnt/home/"$USRNAME"/.config
-  mkdir /mnt/home/"$USRNAME"/.config/i3
+  arch-chroot /mnt mkdir /home/"$USRNAME"/.config
+  arch-chroot /mnt mkdir /home/"$USRNAME"/.config/i3 
   cp /skel/config /mnt/home/"$USRNAME"/.config/i3
+  cp -r /skel/speech-dispatcher /mnt/home/"$USRNAME"/.config
+  arch-chroot /mnt chown -R "$USRNAME" /home/"$USRNAME"/.config
   cp /skel/vol /mnt/usr/bin
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
   arch-chroot /mnt systemctl enable espeakup.service
   echo -e "\n"  
   echo "i3 installation complete"
