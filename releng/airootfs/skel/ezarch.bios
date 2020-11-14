@@ -312,7 +312,7 @@ mntpartnv () {
 #
 psbase () {
   clear
-  pacstrap /mnt base base-devel linux-lts linux-firmware sysfsutils e2fsprogs efibootmgr dosfstools mtools mkinitcpio dhcpcd inetutils netctl grub os-prober device-mapper cryptsetup gptfdisk nano nvme-cli less lvm2 dialog reflector
+  pacstrap /mnt base base-devel linux-lts linux-firmware sysfsutils e2fsprogs efibootmgr dosfstools mtools mkinitcpio dhcpcd inetutils netctl grub os-prober device-mapper cryptsetup gptfdisk nano nvme-cli less lvm2 dialog reflector bash-completion
   clear
   echo -e "\n"
   echo "Pacstrap base system complete..."
