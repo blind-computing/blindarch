@@ -530,7 +530,7 @@ instmate () {
 #
 insti3 () {
   clear
-  pacstrap /mnt i3 lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice espeakup brltty pulseaudio pulseaudio-alsa alsa-utils speech-dispatcher libwnck3 lsof espeak-ng orca sound-theme-freedesktop
+  pacstrap /mnt i3 lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice espeakup brltty pulseaudio pulseaudio-alsa alsa-utils speech-dispatcher libwnck3 lsof espeak-ng orca sound-theme-freedesktop mate-terminal
   echo "i3 packages installed"
   sleep 5
   arch-chroot /mnt systemctl enable lightdm.service
