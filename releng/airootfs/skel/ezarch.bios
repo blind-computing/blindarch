@@ -540,7 +540,7 @@ insti3 () {
   echo "pushing custom config files for i3"
   arch-chroot /mnt mkdir /home/"$USRNAME"/.config
   arch-chroot /mnt mkdir /home/"$USRNAME"/.config/i3 
-  cp /skel/config /mnt/home/"$USRNAME"/.config/i3
+  cp /skel/i3/config /mnt/home/"$USRNAME"/.config/i3
   cp -r /skel/speech-dispatcher /mnt/home/"$USRNAME"/.config
   arch-chroot /mnt chown -R "$USRNAME" /home/"$USRNAME"/.config
   cp /skel/vol /mnt/usr/bin
