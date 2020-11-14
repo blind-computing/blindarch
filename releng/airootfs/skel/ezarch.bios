@@ -545,13 +545,36 @@ insti3 () {
   cp -r /skel/speech-dispatcher /mnt/home/"$USRNAME"/.config
   arch-chroot /mnt chown -R "$USRNAME" /home/"$USRNAME"/.config
   cp /skel/vol /mnt/usr/bin
-  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+# enable auto logon in lightdm.conf
+  arch-chroot /mnt groupadd -r autologin
+  arch-chroot /mnt gpasswd -a "$USRNAME" autologin
+# these sed commands update the lightdm.conf with the proper values to autologin  
+  sed -i "0,/^#autologin-user=/s//autologin-user=${USRNAME}/" /skel/lightdmfiles/lightdm.conf
+  sed -i "s/^#autologin-session=*/autologin-session=i3/" /skel/lightdmfiles/lightdm.conf   
+  cp /skel/lightdmfiles/lightdm.conf /mnt/etc/lightdm
+# copy greeter file - this is so we can enable orca later and turn off autologin  
+  cp /skel/lightdmfiles/lightdm-gtk-greeter.conf /mnt/etc/lightdm
   arch-chroot /mnt systemctl enable espeakup.service
   echo -e "\n"  
   echo "i3 installation complete"
   sleep 20
   clear
 }
+
+i3readme () { while true
+  do
+  echo "$(</skel/readmes/i3readme)"
+  echo -e "\n"
+  read -p "Enter r to Return to menu: " choice8 
+
+  case $choice8 in
+    r|R ) inst_desk ;;
+    * ) invalid ;;
+  esac
+done	
+	
+}
+
 
 
 #instcinn () {
@@ -737,6 +760,8 @@ do
   clear
   echo "--------------------------------"
   echo "       Desktop Install Menu"
+  echo " WARNING: These installers enable"
+  echo "       autologin by default!" 
   echo "--------------------------------"
   echo ""
   echo "  1) Mate"
@@ -745,6 +770,7 @@ do
 # echo "  4) Mate"
 # echo "  5) Cinnamon"
 # echo "  6) Gnome"
+  echo "  N) notes on i3"
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
@@ -756,6 +782,7 @@ do
 #    4 ) instmate ;;
 #    5 ) instcinn ;;
 #    6 ) instgnome ;;
+	n|N ) i3readme ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac

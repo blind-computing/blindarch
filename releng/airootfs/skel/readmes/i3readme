@@ -1,0 +1,20 @@
+This is the readme for i3.
+The following are the packages we are installing:
+
+i3
+lightdm
+lightdm-gtk-greeter
+lightdm-gtk-greeter-settings
+accountsservice
+espeakup
+brltty
+pulseaudio
+pulseaudio-alsa
+alsa-utils
+speech-dispatcher
+libwnck3
+lsof
+espeak-ng
+orca
+sound-theme-freedesktop
+mate-terminal

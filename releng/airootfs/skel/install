@@ -33,7 +33,7 @@ welcomer () {
  echo "=  https://github.com/blind-computing/blindarch   ="  
  echo "==================================================="
  echo -e " \n"
- sleep 20
+ sleep 3
 }
 #
 #
@@ -74,6 +74,8 @@ mainmenu () { while true
 do
   clear
   echo "-------------------------------------"
+  echo "Welcome to the BlindArch Distro"
+  echo "       EZarcher Installer"
   echo " Choose Install Script to Launch"
   echo "-------------------------------------"
   echo ""
