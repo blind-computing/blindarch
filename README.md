@@ -8,7 +8,7 @@
 For information on EZARCH, please visit the [main page on Sourceforge](https://sourceforge.net/projects/ezarch/)
 
 BlindArch is a project based on [Talking Arch](http://talkingarch.info) to create an ArchLinux install CD for blind and visually impaired users. It also offers an easy to use installer to allow users to set up a completely accessible and customisable arch linux installation.
-You can download the image from the [Blind Computing download page](https://onlinemarketspecialist.com/blindarch/BlindArch-2020.11.04-x86_64.iso).
+You can download the image from the [Blind Computing download page](https://onlinemarketspecialist.com/blindarch/BlindArch-2020.11.15-x86_64.iso).
 
 NOTE: The listed address is a temporary placeholder until the ISO can be sent up to the BC server.
 
@@ -41,6 +41,8 @@ It's as easy as that!
 
 ## Miscellaneous Notes
 
+Currently i3 is the only DE we have made modifications to in order to for accessibility on boot.
+
 Most of the modifications made to the blindarch iso are confined to the airootfs subdirectory.
 A couple of packages were also added to the package list to add support for virtual box.
 Some other modifications include larger text for those with low vision and the default being set to the espeak by default.
@@ -50,6 +52,7 @@ Some other modifications include larger text for those with low vision and the d
 
 All of the people who work on archiso have our heartfelt gratitude.
 Thank you for making this process so easy.
+Special thanks to Eznix for all his hard work building the EZarcher script.
 
 Also, we appreciate the people who have used and tested BlindArch, especially
 those who sent useful comments and suggestions.
