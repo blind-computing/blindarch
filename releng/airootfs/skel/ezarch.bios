@@ -88,6 +88,32 @@ usrpwd () {
 }
 #
 #
+mkusersudo () {
+  clear
+  echo -e "\n"
+  read -p "Do you want to add user to sudo group, yes or no?: " MKUSERSUDO
+  echo -e "\n"  
+    case $MKUSERSUDO in
+    y|Y|yes|YES|Yes)
+    MKUSERSUDO=1
+    echo ${USRNAME}" added to sudo group."
+    sleep 2
+    ;;
+    n|N|no|NO|No)
+    MKUSERSUDO=0
+    echo ${USRNAME}" will not be added to sudo."
+    sleep 2
+    ;;
+    *)
+    echo "Invalid input..."
+    sleep 2
+    unset MKUSERSUDO
+    mkusersudo
+    ;;
+    esac
+  clear  
+}
+
 #
 #
 rtpwd () { 
@@ -550,7 +576,13 @@ insti3 () {
   arch-chroot /mnt gpasswd -a "$USRNAME" autologin
 # these sed commands update the lightdm.conf with the proper values to autologin  
   sed -i "0,/^#autologin-user=/s//autologin-user=${USRNAME}/" /skel/lightdmfiles/lightdm.conf
-  sed -i "s/^#autologin-session=*/autologin-session=i3/" /skel/lightdmfiles/lightdm.conf   
+  sed -i "s/^#autologin-session=*/autologin-session=i3/" /skel/lightdmfiles/lightdm.conf
+# add user to sudo
+  if [ "$MKUSERSUDO" == 1 ]; then
+    arch-chroot /mnt groupadd sudo
+	arch-chroot /mnt gpasswd -a "$USRNAME" sudo
+	sed -i "0,/^#\s%sudo\sALL=(ALL)\sALL/s//%sudo ALL=(ALL) ALL/" /mnt/etc/sudoers
+	fi     
   cp /skel/lightdmfiles/lightdm.conf /mnt/etc/lightdm
 # copy greeter file - this is so we can enable orca later and turn off autologin  
   cp /skel/lightdmfiles/lightdm-gtk-greeter.conf /mnt/etc/lightdm
@@ -619,8 +651,9 @@ do
   echo ""
   echo "  1) Create user name"
   echo "  2) Make user password"
-  echo "  3) Make root password"
-  echo "  4) Make hostname"
+  echo "  3) Add user to sudo group"
+  echo "  4) Make root password"
+  echo "  5) Make hostname"
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
@@ -628,8 +661,9 @@ do
   case $choice2 in
     1 ) usrname ;;
     2 ) usrpwd ;;
-    3 ) rtpwd ;;
-    4 ) hstname ;;
+    3 ) mkusersudo;;
+    4 ) rtpwd ;;
+    5 ) hstname ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
