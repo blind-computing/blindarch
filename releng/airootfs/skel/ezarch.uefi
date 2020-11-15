@@ -3,8 +3,31 @@
 # EZ Arch Installer - UEFI
 # Revision: 5.3 -- by eznix (https://sourceforge.net/projects/ezarch/)
 # (GNU/General Public License version 3.0)
+# modified by blindarch team
+# https://github.com/blind-computing/blindarch
 #
+# ---------------------------------------
+# Define Package Config Variables:
+# ---------------------------------------
 #
+# 
+
+I3PKGLST=$(</skel/package_configs/i3.pkglst)
+PSBASEPKGLST=$(</skel/package_configs/psbase.pkglst)
+XORGPKGLST=$(</skel/package_configs/xorg.pkglst)
+GENPKGLST=$(</skel/package_configs/gen.pkglst)
+MEDIAPKGLST=$(</skel/package_configs/media.pkglst)
+NETWORKPKGLST=$(</skel/package_configs/network.pkglst)
+FONTSPKGLST=$(</skel/package_configs/fonts.pkglst)
+PRINTPKGLST=$(</skel/package_configs/print.pkglst)
+LXQTPKGLST=$(</skel/package_configs/lxqt.pkglst)
+KDEPKGLST=$(</skel/package_configs/kde.pkglst)
+XFCEPKGLST=$(</skel/package_configs/xfce.pkglst)
+MATEPKGLST=$(</skel/package_configs/mate.pkglst)
+CINNPKGLST=$(</skel/package_configs/cinn.pkglst)
+GNOMEPKGLST=$(</skel/package_configs/gnome.pkglst)
+
+
 #
 # ---------------------------------------
 # Define Functions:
@@ -21,18 +44,14 @@ handlerr () {
 #
 welcome () {
   clear
-  echo "==================================================="
-  echo "=                                                 ="
-  echo "=     Welcome to the EZArch Installer Script      ="
-  echo "=                                                 ="
-  echo "=     UEFI Edition                                ="
-  echo "=     Version 5.3  (Release)                      ="
-  echo "=                                                 ="
-  echo "=     Brought to you by eznix                     ="
-  echo "=     https://sourceforge.net/projects/ezarch/    ="
-  echo "=                                                 ="
-  echo -e "=================================================== \n"
-  sleep 4
+ echo "==================================================="
+ echo ""
+ echo "              U E F I Legacy Install"
+ echo "                    Main Menu"
+ echo "==================================================="
+
+ echo -e " \n"
+ sleep 4
 }
 #
 #
@@ -67,26 +86,86 @@ usrname () {
 usrpwd () { 
   clear
   echo -e "\n"
-  read -p "Type your user password, be exact, and press Enter: " USRPWD
-  [[ -z "$USRPWD" ]] && usrpwd
+  read -sp "Type your user password and press Enter: " USRPWD
+
+  echo -e "\n"
+  read -sp "Type the password again: " USRPWD2
+  
+  if [ "$USRPWD" == "$USRPWD2" ]; then  
+  	  [[ -z "$USRPWD" ]] && usrpwd
+	  echo -e "\n"
+	  echo "User password set"
+	  echo -e "\n"
+  	echo -e "moving to prior menu"
+  	sleep 4	  
+  
+  else
+  	echo -e "\n"
+  	echo -e "Passwords do not match"
+  	echo -e "\n"
+    sleep 2
+    unset USRPWD
+    usrpwd
+  	
+ 	
+  fi
+}
+#
+#
+mkusersudo () {
   clear
   echo -e "\n"
-  echo "User password set to "${USRPWD}"..."
-  sleep 2
-  clear
+  read -p "Do you want to add user to sudo group, yes or no?: " MKUSERSUDO
+  echo -e "\n"  
+    case $MKUSERSUDO in
+    y|Y|yes|YES|Yes)
+    MKUSERSUDO=1
+    echo ${USRNAME}" added to sudo group."
+    sleep 2
+    ;;
+    n|N|no|NO|No)
+    MKUSERSUDO=0
+    echo ${USRNAME}" will not be added to sudo."
+    sleep 2
+    ;;
+    *)
+    echo "Invalid input..."
+    sleep 2
+    unset MKUSERSUDO
+    mkusersudo
+    ;;
+    esac
+  clear  
 }
+
 #
 #
 rtpwd () { 
   clear
   echo -e "\n"
-  read -p "Type your root password, be exact, and press Enter: " RTPWD
-  [[ -z "$RTPWD" ]] && rtpwd
-  clear
+  read -sp "Type your root password and press Enter: " RTPWD
+
   echo -e "\n"
-  echo "Root password set to "${RTPWD}"..."
-  sleep 2
-  clear
+  read -sp "Type the password again: " RTPWD2
+  
+  if [ "$RTPWD" == "$RTPWD2" ]; then  
+  	  [[ -z "$RTPWD" ]] && rtpwd
+	  echo -e "\n"
+	  echo "Root password set"
+	  echo -e "\n"
+  	  echo -e "moving to prior menu"
+  	  sleep 4	  
+  
+  else
+  	echo -e "\n"
+  	echo -e "Passwords do not match"
+  	echo -e "\n"
+    sleep 2
+    unset RTPWD
+    rtpwd
+  	
+ 	
+  fi
 }
 #
 #
@@ -164,7 +243,7 @@ rootsize () {
 trgtdrvsd () { 
   clear
   echo -e "Check to see the available drives: \n"
-  /bin/lsblk
+  /bin/lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
   echo -e "\n"
   read -p "Type your target device (e.g. sda), be exact, and press Enter: " TRGTDRV
   [[ -z "$TRGTDRV" ]] && trgtdrvsd
@@ -179,7 +258,7 @@ trgtdrvsd () {
 trgtdrvnv () { 
   clear
   echo -e "Check to see the available drives: \n"
-  /bin/lsblk
+  /bin/lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
   echo -e "\n"
   read -p "Type your target device (e.g. nvme0n1), be exact, and press Enter: " TRGTDRV
   [[ -z "$TRGTDRV" ]] && trgtdrvnv
@@ -289,7 +368,7 @@ mntpartnv () {
 #
 psbase () {
   clear
-  pacstrap /mnt base base-devel linux-lts linux-firmware sysfsutils e2fsprogs efibootmgr dosfstools mtools mkinitcpio dhcpcd inetutils netctl grub os-prober device-mapper cryptsetup gptfdisk nano nvme-cli less lvm2 dialog reflector
+  pacstrap /mnt $PSBASEPKGLST
   clear
   echo -e "\n"
   echo "Pacstrap base system complete..."
@@ -369,7 +448,7 @@ instgrub () {
 #
 instxorg () {
   clear
-  pacstrap /mnt xorg xorg-apps xorg-server xorg-drivers xorg-xkill xorg-xinit xterm mesa
+  pacstrap /mnt $XORGPKGLST
   clear
   echo -e "\n"
   echo "Xorg installed installed..."
@@ -380,7 +459,7 @@ instxorg () {
 #
 instgen () {
   clear
-  pacstrap /mnt linux-lts-headers arch-install-scripts bind-tools amd-ucode intel-ucode dkms p7zip archiso mkinitcpio-archiso haveged pacman-contrib pkgfile git diffutils usbutils jfsutils reiserfsprogs btrfs-progs f2fs-tools logrotate man-db man-pages mdadm perl s-nail texinfo which xfsprogs lsscsi sdparm sg3_utils smartmontools fuse2 fuse3 ntfs-3g exfat-utils gvfs gvfs-afc gvfs-goa gvfs-gphoto2 gvfs-mtp gvfs-nfs gvfs-smb unrar unzip unace xz xdg-user-dirs grsync ddrescue dd_rescue testdisk hdparm htop rsync hardinfo bash-completion geany lsb-release polkit bleachbit packagekit gparted papirus-icon-theme meld libburn libisofs libisoburn devtools
+  pacstrap /mnt $GENPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable haveged.service
   clear
@@ -393,7 +472,7 @@ instgen () {
 #
 instmedia () {
   clear
-  pacstrap /mnt pulseaudio vlc simplescreenrecorder cdrtools gstreamer gst-libav gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gstreamer-vaapi xvidcore frei0r-plugins cdrdao dvdauthor transcode alsa-utils alsa-plugins alsa-firmware pulseaudio-alsa pulseaudio-equalizer pulseaudio-jack ffmpeg ffmpegthumbnailer libdvdcss gimp guvcview imagemagick flac faad2 faac mjpegtools x265 x264 lame sox mencoder
+  pacstrap /mnt $MEDIAPKGLST
   clear
   echo -e "\n"
   echo "Multimedia packages installed..."
@@ -404,7 +483,7 @@ instmedia () {
 #
 instnet () {
   clear
-  pacstrap /mnt b43-fwcutter broadcom-wl-dkms ipw2100-fw ipw2200-fw gnu-netcat net-tools networkmanager networkmanager-openvpn nm-connection-editor network-manager-applet wget curl firefox thunderbird wireless_tools nfs-utils nilfs-utils dhclient dnsmasq dmraid dnsutils openvpn openssh openssl samba whois iwd filezilla avahi openresolv youtube-dl vsftpd wpa_supplicant
+  pacstrap /mnt $NETWORKPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable NetworkManager.service
   clear
@@ -417,7 +496,7 @@ instnet () {
 #
 instfonts () {
   clear
-  pacstrap /mnt ttf-ubuntu-font-family ttf-dejavu ttf-bitstream-vera ttf-liberation noto-fonts ttf-roboto ttf-opensans opendesktop-fonts cantarell-fonts freetype2 
+  pacstrap /mnt $FONTSPKGLST
   clear
   echo -e "\n"
   echo "Fonts packages installed..."
@@ -428,7 +507,7 @@ instfonts () {
 #
 instprint () {
   clear
-  pacstrap /mnt system-config-printer foomatic-db foomatic-db-engine gutenprint hplip simple-scan cups cups-pdf cups-filters cups-pk-helper ghostscript gsfonts python-pillow python-pyqt5 python-pip python-reportlab
+  pacstrap /mnt $PRINTPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable org.cups.cupsd.service
   clear
@@ -439,82 +518,138 @@ instprint () {
 }
 #
 #
-instlxqt () {
-  clear
-  pacstrap /mnt lxqt openbox obconf-qt pcmanfm-qt lxqt-sudo breeze-icons qterminal kwrite networkmanager-qt qbittorrent pavucontrol-qt quodlibet kdenlive k3b xarchiver galculator polkit-qt5 packagekit-qt5 xscreensaver sddm sddm-kcm
-  sleep 2
-  arch-chroot /mnt systemctl enable sddm.service
-  clear
-  echo -e "\n"
-  echo "LXQt desktop installed..."
-  sleep 2
-  clear
-}
+#instlxqt () {
+# clear
+# pacstrap /mnt $LXQTPKGLST
+# sleep 2
+# arch-chroot /mnt systemctl enable sddm.service
+# clear
+# echo -e "\n"
+# echo "LXQt desktop installed..."
+# sleep 2
+# clear
+#}
 #
 #
-instkde () {
-  clear
-  pacstrap /mnt plasma breeze-icons kwrite qbittorrent pavucontrol-qt quodlibet print-manager sweeper dolphin kdenlive k3b ark konsole gwenview okular kcalc packagekit-qt5 sddm sddm-kcm
-  sleep 2
-  arch-chroot /mnt systemctl enable sddm.service
-  clear
-  echo -e "\n"
-  echo "KDE Plasma desktop installed..."
-  sleep 2
-  clear
-}
+#instkde () {
+#clear
+# pacstrap /mnt $KDEPKGLST
+# sleep 2
+# arch-chroot /mnt systemctl enable sddm.service
+# clear
+# echo -e "\n"
+# echo "KDE Plasma desktop installed..."
+# sleep 2
+# clear
+#}
 #
 #
-instxfce () {
-  clear
-  pacstrap /mnt xfce4 xfce4-goodies galculator transmission-gtk pavucontrol xfburn asunder quodlibet xarchiver arc-gtk-theme arc-icon-theme gtk-engine-murrine adapta-gtk-theme polkit-gnome gnome-disk-utility gnome-packagekit catfish lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice
-  sleep 2
-  arch-chroot /mnt systemctl enable lightdm.service
-  clear
-  echo -e "\n"
-  echo "XFCE desktop installed..."
-  sleep 2
-  clear
-}
+#instxfce () {
+# clear
+# pacstrap /mnt $XFCEPKGLST
+# sleep 2
+# arch-chroot /mnt systemctl enable lightdm.service
+# clear
+# echo -e "\n"
+# echo "XFCE desktop installed..."
+# sleep 2
+# clear
+#}
 #
 #
 instmate () {
   clear
-  pacstrap /mnt mate mate-extra mate-applet-dock adapta-gtk-theme arc-gtk-theme arc-icon-theme gtk-engine-murrine transmission-gtk brasero asunder quodlibet gnome-disk-utility mate-polkit gnome-packagekit lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice
+  pacstrap /mnt $MATEPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable lightdm.service
-  clear
+  arch-chroot /mnt gsettings set org.mate.interface accessibility true
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  echo "light dm services and config pushed"
   echo -e "\n"
-  echo "Mate desktop installed..."
-  sleep 2
+  echo "Mate desktop installation complete"
+  sleep 20
   clear
 }
 #
 #
-instcinn () {
+insti3 () {
   clear
-  pacstrap /mnt cinnamon cinnamon-translations gnome-terminal adwaita-icon-theme adapta-gtk-theme arc-gtk-theme arc-icon-theme gtk-engine-murrine gnome-keyring nemo nemo-share xed file-roller nemo-fileroller tmux tldr transmission-gtk brasero asunder quodlibet gnome-disk-utility polkit-gnome gnome-packagekit evince viewnior lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice
-  sleep 2
+  pacstrap /mnt $I3PKGLST
+  echo "i3 packages installed"
+  sleep 5
   arch-chroot /mnt systemctl enable lightdm.service
+  echo "lightdm enabled"
+  sleep 5
   clear
+  echo "pushing custom config files for i3"
+  arch-chroot /mnt mkdir /home/"$USRNAME"/.config
+  arch-chroot /mnt mkdir /home/"$USRNAME"/.config/i3 
+  cp /skel/i3/config /mnt/home/"$USRNAME"/.config/i3
+  cp /skel/i3/i3-sensible-terminal /mnt/usr/bin
+  cp -r /skel/speech-dispatcher /mnt/home/"$USRNAME"/.config
+  arch-chroot /mnt chown -R "$USRNAME" /home/"$USRNAME"/.config
+  cp /skel/vol /mnt/usr/bin
+# enable auto logon in lightdm.conf
+  arch-chroot /mnt groupadd -r autologin
+  arch-chroot /mnt gpasswd -a "$USRNAME" autologin
+# these sed commands update the lightdm.conf with the proper values to autologin  
+  sed -i "0,/^#autologin-user=/s//autologin-user=${USRNAME}/" /skel/lightdmfiles/lightdm.conf
+  sed -i "s/^#autologin-session=*/autologin-session=i3/" /skel/lightdmfiles/lightdm.conf
+# add user to sudo
+  if [ "$MKUSERSUDO" == 1 ]; then
+    arch-chroot /mnt groupadd sudo
+	arch-chroot /mnt gpasswd -a "$USRNAME" sudo
+	sed -i "0,/^#\s%sudo\sALL=(ALL)\sALL/s//%sudo ALL=(ALL) ALL/" /mnt/etc/sudoers
+	fi     
+  cp /skel/lightdmfiles/lightdm.conf /mnt/etc/lightdm
+# copy greeter file - this is so we can enable orca later and turn off autologin  
+  cp /skel/lightdmfiles/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  arch-chroot /mnt systemctl enable espeakup.service
+  echo -e "\n"  
+  echo "i3 installation complete"
+  sleep 20
+  clear
+}
+
+i3readme () { while true
+  do
+  echo "$(</skel/readmes/i3readme)"
   echo -e "\n"
-  echo "Cinnamon desktop installed..."
-  sleep 2
-  clear
+  read -p "Enter r to Return to menu: " choice8 
+
+  case $choice8 in
+    r|R ) inst_desk ;;
+    * ) invalid ;;
+  esac
+done	
+	
 }
 #
 #
-instgnome () {
-  clear
-  pacstrap /mnt gnome gdm accerciser dconf-editor ghex gnome-builder gnome-sound-recorder gnome-todo gnome-tweaks gnome-usage sysprof gnome-nettool chrome-gnome-shell gnome-shell-extensions adapta-gtk-theme arc-gtk-theme arc-icon-theme gtk-engine-murrine gnome-keyring transmission-gtk brasero asunder quodlibet gnome-disk-utility polkit-gnome gnome-packagekit evince
-  sleep 2
-  arch-chroot /mnt systemctl enable gdm.service
-  clear
-  echo -e "\n"
-  echo "Gnome desktop installed..."
-  sleep 2
-  clear
-}
+#instcinn () {
+# clear
+# pacstrap /mnt $CINNPKGLST
+# sleep 2
+# arch-chroot /mnt systemctl enable lightdm.service
+# clear
+# echo -e "\n"
+# echo "Cinnamon desktop installed..."
+# sleep 2
+# clear
+#}
+#
+#
+#instgnome () {
+# clear
+# pacstrap /mnt $GNOMEPKGLST
+# sleep 2
+# arch-chroot /mnt systemctl enable gdm.service
+# clear
+# echo -e "\n"
+# echo "Gnome desktop installed..."
+# sleep 2
+# clear
+#}
 #
 #
 invalid () {
@@ -528,13 +663,14 @@ make_upht () { while true
 do
   clear
   echo "----------------------------------"
-  echo " User, Passwords, & Hostname"
+  echo " User Password Hostname Menu"
   echo "----------------------------------"
   echo ""
   echo "  1) Create user name"
   echo "  2) Make user password"
-  echo "  3) Make root password"
-  echo "  4) Make hostname"
+  echo "  3) Add user to sudo group"
+  echo "  4) Make root password"
+  echo "  5) Make hostname"
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
@@ -542,8 +678,9 @@ do
   case $choice2 in
     1 ) usrname ;;
     2 ) usrpwd ;;
-    3 ) rtpwd ;;
-    4 ) hstname ;;
+    3 ) mkusersudo;;
+    4 ) rtpwd ;;
+    5 ) hstname ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
@@ -671,26 +808,30 @@ inst_desk () { while true
 do
   clear
   echo "--------------------------------"
-  echo " Choose A Desktop"
+  echo "       Desktop Install Menu"
+  echo " WARNING: These installers enable"
+  echo "       autologin by default!" 
   echo "--------------------------------"
   echo ""
-  echo "  1) LXQt"
-  echo "  2) Plasma"
-  echo "  3) XFCE"
-  echo "  4) Mate"
-  echo "  5) Cinnamon"
-  echo "  6) Gnome"
+  echo "  1) i3"
+  echo "  2) Mate"
+# echo "  3) XFCE"
+# echo "  4) Mate"
+# echo "  5) Cinnamon"
+# echo "  6) Gnome"
+  echo "  N) notes on i3"
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
   read -p "Please enter your choice: " choice7
   case $choice7 in
-    1 ) instlxqt ;;
-    2 ) instkde ;;
-    3 ) instxfce ;;
-    4 ) instmate ;;
-    5 ) instcinn ;;
-    6 ) instgnome ;;
+    1 ) insti3 ;;
+    2 ) instmate ;;
+#    3 ) instxfce ;;
+#    4 ) instmate ;;
+#    5 ) instcinn ;;
+#    6 ) instgnome ;;
+	n|N ) i3readme ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac

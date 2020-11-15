@@ -7,6 +7,27 @@
 # https://github.com/blind-computing/blindarch
 #
 # ---------------------------------------
+# Define Package Config Variables:
+# ---------------------------------------
+#
+# 
+
+I3PKGLST=$(</skel/package_configs/i3.pkglst)
+PSBASEPKGLST=$(</skel/package_configs/psbase.pkglst)
+XORGPKGLST=$(</skel/package_configs/xorg.pkglst)
+GENPKGLST=$(</skel/package_configs/gen.pkglst)
+MEDIAPKGLST=$(</skel/package_configs/media.pkglst)
+NETWORKPKGLST=$(</skel/package_configs/network.pkglst)
+FONTSPKGLST=$(</skel/package_configs/fonts.pkglst)
+PRINTPKGLST=$(</skel/package_configs/print.pkglst)
+LXQTPKGLST=$(</skel/package_configs/lxqt.pkglst)
+KDEPKGLST=$(</skel/package_configs/kde.pkglst)
+XFCEPKGLST=$(</skel/package_configs/xfce.pkglst)
+MATEPKGLST=$(</skel/package_configs/mate.pkglst)
+CINNPKGLST=$(</skel/package_configs/cinn.pkglst)
+GNOMEPKGLST=$(</skel/package_configs/gnome.pkglst)
+
+# ---------------------------------------
 # Define Functions:
 # ---------------------------------------
 #
@@ -338,7 +359,7 @@ mntpartnv () {
 #
 psbase () {
   clear
-  pacstrap /mnt base base-devel linux-lts linux-firmware sysfsutils e2fsprogs efibootmgr dosfstools mtools mkinitcpio dhcpcd inetutils netctl grub os-prober device-mapper cryptsetup gptfdisk nano nvme-cli less lvm2 dialog reflector bash-completion
+  pacstrap /mnt $PSBASEPKGLST
   clear
   echo -e "\n"
   echo "Pacstrap base system complete..."
@@ -379,7 +400,6 @@ sysusrpwd () {
   arch-chroot /mnt useradd -mU -s /bin/bash -G sys,log,network,floppy,scanner,power,rfkill,users,video,storage,optical,lp,audio,wheel,adm "${USRNAME}"
   arch-chroot /mnt chpasswd <<< ""${USRNAME}":"${USRPWD}""
   arch-chroot /mnt chpasswd <<< "root:"${RTPWD}""
-#  cp /skel/test.txt /mnt/home/"${USRNAME}"
   clear
 }
 #
@@ -419,7 +439,7 @@ instgrub () {
 #
 instxorg () {
   clear
-  pacstrap /mnt xorg xorg-apps xorg-server xorg-drivers xorg-xkill xorg-xinit xterm mesa
+  pacstrap /mnt $XORGPKGLST
   clear
   echo -e "\n"
   echo "Xorg installed installed..."
@@ -430,7 +450,7 @@ instxorg () {
 #
 instgen () {
   clear
-  pacstrap /mnt linux-lts-headers arch-install-scripts bind-tools amd-ucode intel-ucode dkms p7zip archiso mkinitcpio-archiso haveged pacman-contrib pkgfile git diffutils usbutils jfsutils reiserfsprogs btrfs-progs f2fs-tools logrotate man-db man-pages mdadm perl s-nail texinfo which xfsprogs lsscsi sdparm sg3_utils smartmontools fuse2 fuse3 ntfs-3g exfat-utils gvfs gvfs-afc gvfs-goa gvfs-gphoto2 gvfs-mtp gvfs-nfs gvfs-smb unrar unzip unace xz xdg-user-dirs grsync ddrescue dd_rescue testdisk hdparm htop rsync hardinfo bash-completion geany lsb-release polkit bleachbit packagekit gparted papirus-icon-theme meld libburn libisofs libisoburn devtools
+  pacstrap /mnt $GENPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable haveged.service
   clear
@@ -443,7 +463,7 @@ instgen () {
 #
 instmedia () {
   clear
-  pacstrap /mnt pulseaudio vlc simplescreenrecorder cdrtools gstreamer gst-libav gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gstreamer-vaapi xvidcore frei0r-plugins cdrdao dvdauthor transcode alsa-utils alsa-plugins alsa-firmware pulseaudio-alsa pulseaudio-equalizer pulseaudio-jack ffmpeg ffmpegthumbnailer libdvdcss gimp guvcview imagemagick flac faad2 faac mjpegtools x265 x264 lame sox mencoder
+  pacstrap /mnt $MEDIAPKGLST
   clear
   echo -e "\n"
   echo "Multimedia packages installed..."
@@ -454,7 +474,7 @@ instmedia () {
 #
 instnet () {
   clear
-  pacstrap /mnt b43-fwcutter broadcom-wl-dkms ipw2100-fw ipw2200-fw gnu-netcat net-tools networkmanager networkmanager-openvpn nm-connection-editor network-manager-applet wget curl firefox thunderbird wireless_tools nfs-utils nilfs-utils dhclient dnsmasq dmraid dnsutils openvpn openssh openssl samba whois iwd filezilla avahi openresolv youtube-dl vsftpd wpa_supplicant
+  pacstrap /mnt $NETWORKPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable NetworkManager.service
   clear
@@ -467,7 +487,7 @@ instnet () {
 #
 instfonts () {
   clear
-  pacstrap /mnt ttf-ubuntu-font-family ttf-dejavu ttf-bitstream-vera ttf-liberation noto-fonts ttf-roboto ttf-opensans opendesktop-fonts cantarell-fonts freetype2 
+  pacstrap /mnt $FONTSPKGLST
   clear
   echo -e "\n"
   echo "Fonts packages installed..."
@@ -478,7 +498,7 @@ instfonts () {
 #
 instprint () {
   clear
-  pacstrap /mnt system-config-printer foomatic-db foomatic-db-engine gutenprint hplip simple-scan cups cups-pdf cups-filters cups-pk-helper ghostscript gsfonts python-pillow python-pyqt5 python-pip python-reportlab
+  pacstrap /mnt $PRINTPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable org.cups.cupsd.service
   clear
@@ -489,20 +509,9 @@ instprint () {
 }
 #
 #
-#instjdfstuff () {
-# clear
-# pacstrap /mnt thunderbird firefox chromium discord code kicad kicad-library kicad-library-3d pcbdraw gerbv pcb qt5-base electron libreoffice-fresh lutris hexchat ktorrent mumble gnucash wireshark-qt transmission-qt okular arduino arduino-docs gqrx freecad grub-customizer obs-studio pulseeffects smplayer audacity calf kdenlive mpv vlc conky avahi htop jre-openjdk openjdk-src virtualbox reflector hardinfo qemu libvirt virt-manager ark sqlite okteta spectacle gedit
-# 
-# echo -e "\n"
-# echo "JDFtheTech packages installed..."
-# sleep 50
-# clear
-#}
-#
-#
 #instlxqt () {
 # clear
-# pacstrap /mnt lxqt openbox obconf-qt pcmanfm-qt lxqt-sudo breeze-icons qterminal kwrite networkmanager-qt qbittorrent pavucontrol-qt quodlibet kdenlive k3b xarchiver galculator polkit-qt5 packagekit-qt5 xscreensaver sddm sddm-kcm
+# pacstrap /mnt $LXQTPKGLST
 # sleep 2
 # arch-chroot /mnt systemctl enable sddm.service
 # clear
@@ -515,7 +524,7 @@ instprint () {
 #
 #instkde () {
 #clear
-# pacstrap /mnt plasma breeze-icons kwrite qbittorrent pavucontrol-qt quodlibet print-manager sweeper dolphin kdenlive k3b ark konsole gwenview okular kcalc packagekit-qt5 sddm sddm-kcm
+# pacstrap /mnt $KDEPKGLST
 # sleep 2
 # arch-chroot /mnt systemctl enable sddm.service
 # clear
@@ -528,7 +537,7 @@ instprint () {
 #
 #instxfce () {
 # clear
-# pacstrap /mnt xfce4 xfce4-goodies galculator transmission-gtk pavucontrol xfburn asunder quodlibet xarchiver arc-gtk-theme arc-icon-theme gtk-engine-murrine adapta-gtk-theme polkit-gnome gnome-disk-utility gnome-packagekit catfish lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice
+# pacstrap /mnt $XFCEPKGLST
 # sleep 2
 # arch-chroot /mnt systemctl enable lightdm.service
 # clear
@@ -541,7 +550,7 @@ instprint () {
 #
 instmate () {
   clear
-  pacstrap /mnt mate mate-extra mate-applet-dock adapta-gtk-theme arc-gtk-theme arc-icon-theme gtk-engine-murrine transmission-gtk brasero asunder quodlibet gnome-disk-utility mate-polkit gnome-packagekit lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice orca espeakup onboard sound-theme-freedesktop
+  pacstrap /mnt $MATEPKGLST
   sleep 2
   arch-chroot /mnt systemctl enable lightdm.service
   arch-chroot /mnt gsettings set org.mate.interface accessibility true
@@ -556,7 +565,7 @@ instmate () {
 #
 insti3 () {
   clear
-  pacstrap /mnt i3 lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice espeakup brltty pulseaudio pulseaudio-alsa alsa-utils speech-dispatcher libwnck3 lsof espeak-ng orca sound-theme-freedesktop mate-terminal
+  pacstrap /mnt $I3PKGLST
   echo "i3 packages installed"
   sleep 5
   arch-chroot /mnt systemctl enable lightdm.service
@@ -606,12 +615,11 @@ i3readme () { while true
 done	
 	
 }
-
-
-
+#
+#
 #instcinn () {
 # clear
-# pacstrap /mnt cinnamon cinnamon-translations gnome-terminal adwaita-icon-theme adapta-gtk-theme arc-gtk-theme arc-icon-theme gtk-engine-murrine gnome-keyring nemo nemo-share xed file-roller nemo-fileroller tmux tldr transmission-gtk brasero asunder quodlibet gnome-disk-utility polkit-gnome gnome-packagekit evince viewnior lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings accountsservice
+# pacstrap /mnt $CINNPKGLST
 # sleep 2
 # arch-chroot /mnt systemctl enable lightdm.service
 # clear
@@ -624,7 +632,7 @@ done
 #
 #instgnome () {
 # clear
-# pacstrap /mnt gnome gdm accerciser dconf-editor ghex gnome-builder gnome-sound-recorder gnome-todo gnome-tweaks gnome-usage sysprof gnome-nettool chrome-gnome-shell gnome-shell-extensions adapta-gtk-theme arc-gtk-theme arc-icon-theme gtk-engine-murrine gnome-keyring transmission-gtk brasero asunder quodlibet gnome-disk-utility polkit-gnome gnome-packagekit evince
+# pacstrap /mnt $GNOMEPKGLST
 # sleep 2
 # arch-chroot /mnt systemctl enable gdm.service
 # clear
@@ -768,8 +776,7 @@ do
   echo "  3) Multimedia"
   echo "  4) Networking"
   echo "  5) Fonts"
-  echo "  6) Printing support"
-#  echo "  7) JDF Stuff"     
+  echo "  6) Printing support"  
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
@@ -781,7 +788,6 @@ do
     4 ) instnet ;;
     5 ) instfonts ;;
     6 ) instprint ;;
-#    7 ) instjdfstuff;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
@@ -798,8 +804,8 @@ do
   echo "       autologin by default!" 
   echo "--------------------------------"
   echo ""
-  echo "  1) Mate"
-  echo "  2) i3"
+  echo "  1) i3"
+  echo "  2) Mate"
 # echo "  3) XFCE"
 # echo "  4) Mate"
 # echo "  5) Cinnamon"
@@ -810,8 +816,8 @@ do
   echo -e "\n"
   read -p "Please enter your choice: " choice7
   case $choice7 in
-    1 ) instmate ;;
-    2 ) insti3 ;;
+    1 ) insti3 ;;
+    2 ) instmate ;;
 #    3 ) instxfce ;;
 #    4 ) instmate ;;
 #    5 ) instcinn ;;
