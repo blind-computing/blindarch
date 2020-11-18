@@ -8,8 +8,10 @@ page](https://onlinemarketspecialist.com/blindarch/BlindArch-2020.11.04-x86_64.i
 **NOTE:** The listed address is a temporary placeholder until the ISO can be sent up to the BC server.
 
 Blind Arch comes with an install script based on the [EZARCH scripting system by
-Eznix](https://sourceforge.net/projects/ezarch/)(Main SourceForge page). This version is heavily customized to assist
+Eznix][ezarch]. This version is heavily customized to assist
 blind users in a quick and basic install.
+
+[ezarch]: https://sourceforge.net/projects/ezarch/ "Main SourceForge page"
 
 If you just want a CD image, you can stop reading here! The rest of this document is only useful for those who want to
 build their own images.
