@@ -1,0 +1,135 @@
+#!/bin/bash
+#
+# ezarcher script downloader
+# Revision: 1.5 -- by eznix (https://sourceforge.net/projects/ezarch/)
+# (GNU/General Public License version 3.0)
+# modifications by the blind computing team
+# https://github.com/blind-computing/blindarch
+#
+# ---------------------------------------
+# Define Functions:
+# ---------------------------------------
+#
+#
+handlerror () {
+  clear
+  set -uo pipefail
+  trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
+}
+#
+#
+welcomer () {
+  clear
+ echo "==================================================="
+ echo "=                                                 ="
+ echo "=   EZArcher Script Downloader and Launcher       ="
+ echo "=           modified for BlindArch                ="
+ echo "=                                                 ="
+ echo "=           Version 1.5  (Release)                ="
+ echo "=                                                 ="
+ echo "=          Brought to you by eznix                ="
+ echo "=    https://sourceforge.net/projects/ezarch/     ="
+ echo "=        modified by the blindarch team           ="
+ echo "=  https://github.com/blind-computing/blindarch   ="  
+ echo "==================================================="
+ echo -e " \n"
+ sleep 3
+}
+#
+#
+dwnezarchbr () {
+  clear
+
+  ./ezarch.bios
+}
+#
+#
+dwnezarchur () {
+  clear
+  [[ -f ezarch.uefi ]] && rm ezarch.uefi
+  wget https://sourceforge.net/projects/ezarch/files/Scripts/ezarch.uefi
+  clear
+  echo -e "\n"
+  echo "ezarch.uefi Release Version Downloaded"
+  sleep 2
+  clear
+  chmod +x ezarch.uefi
+  ./ezarch.uefi
+}
+#
+#
+updarchkr () {
+  clear
+  pacman -Syy
+  pacman -Sy --noconfirm archlinux-keyring
+  clear
+  echo -e "\n"
+  echo "Arch linux Keyring Updated"
+  sleep 2
+  clear
+}
+#
+#
+mainmenu () { while true
+do
+  clear
+  echo "-------------------------------------"
+  echo "Welcome to the BlindArch Distro"
+  echo "       EZarcher Installer"
+  echo " Choose Install Script to Launch"
+  echo "-------------------------------------"
+  echo ""
+  echo "  1) Update Arch linux Keyring"
+  echo "  2) Run installer for legacy system"
+  echo "  3) Run installer for U E F I system"
+
+  echo ""
+  echo "  X) Exit"
+  echo -e "\n"
+  read -p "Enter your choice: " option9
+  case $option9 in
+    1 ) updarchkr ;;
+    2 ) dwnezarchbr ;;
+    3 ) dwnezarchur ;;
+    x|X ) exit;;
+    * ) invalid ;;
+  esac
+done
+}
+#
+#
+ROOTUSER () {
+  if [[ "$EUID" = 0 ]]; then
+    continue
+  else
+    echo "Please Run As Root"
+    sleep 2
+    exit
+  fi
+}
+#
+#
+ROOTUSER
+handlerror
+welcomer
+mainmenu
+#
+#
+done
+#
+#
+# Disclaimer:
+#
+# THIS SOFTWARE IS PROVIDED BY EZNIX “AS IS” AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+# EVENT SHALL EZNIX BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+# IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+# END
+#
