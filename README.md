@@ -34,7 +34,7 @@ important not to stop the build or folders can be mounted and locked (please rea
 
 The command to build will be:
 
-    sudo mkarchiso -v ~/blindarch
+    sudo mkarchiso -v ~/blindarch/releng
 
 It’s as easy as that!
 
