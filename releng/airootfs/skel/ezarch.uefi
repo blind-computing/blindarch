@@ -698,17 +698,45 @@ done
 #}
 #
 #
-#instgnome () {
-# clear
-# pacstrap /mnt $GNOMEPKGLST
-# sleep 2
-# arch-chroot /mnt systemctl enable gdm.service
-# clear
-# echo -e "\n"
-# echo "Gnome desktop installed..."
-# sleep 2
-# clear
-#}
+instgnome () {
+  clear
+  pacstrap /mnt $GNOMEPKGLST
+  sleep 2
+
+# setup lightdm service
+  arch-chroot /mnt systemctl enable lightdm.service 
+
+# copy greeter file - this is so we can enable orca later and turn off autologin   
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+
+#  arch-chroot /mnt systemctl enable gdm.service
+
+# set session name and run autologin function  
+  SESSIONID="gnome"
+  autologinldm
+  echo -e "\n"
+  sleep 1
+
+# add user to sudo if selected
+  addsudo 
+  echo -e "\n"
+  sleep 1
+
+# the following dconf settings turn on all the accessibility services in mate for the user:
+  echo -e "Using sudo to set dconf settings as user"
+  echo -e "\n"
+
+  echo "enabling reader in dconf:"
+  echo -e "\n"
+  arch-chroot /mnt sudo -u ${USRNAME} dbus-launch --exit-with-session gsettings set org.gnome.desktop.a11y.applications screen-reader-enabled true
+  echo -e "\n"
+  echo "Accessibility services enabled"
+
+
+  echo "Gnome desktop installed..."
+  sleep 2
+  clear
+}
 #
 #
 invalid () {
