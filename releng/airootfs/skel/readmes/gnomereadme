@@ -1,21 +1,34 @@
-MATE is installed with speach enabled by default.
+Gnome is installed with speach enabled by default.
 In addition we enable autologin to prevent screen reader accesibility issues.
 The following are the packages we are installing:
 
-mate
-mate-extra
-mate-applet-dock
+gnome
+lightdm
+accerciser
+dconf-editor
+ghex
+gnome-builder
+gnome-sound-recorder
+gnome-todo
+gnome-tweaks
+gnome-usage
+sysprof
+gnome-nettool
+chrome-gnome-shell
+gnome-shell-extensions
 adapta-gtk-theme
 arc-gtk-theme
 arc-icon-theme
 gtk-engine-murrine
+gnome-keyring
 transmission-gtk
 brasero
 asunder
 quodlibet
 gnome-disk-utility
-mate-polkit
+polkit-gnome
 gnome-packagekit
+evince
 lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
@@ -33,3 +46,5 @@ lsof
 espeak-ng
 orca
 sound-theme-freedesktop
+
+

@@ -112,6 +112,14 @@ usrpwd () {
 }
 #
 #
+virtbox () {
+  clear
+  echo -e "adding virtual box support"
+  pacstrap /mnt virtualbox-guest-utils virtualbox-guest-dkms
+
+}
+#
+#
 mkusersudo () {
   clear
   echo -e "\n"
@@ -670,32 +678,45 @@ insti3 () {
 }
 #
 #
-i3readme () { while true
-  do
-  echo "$(</skel/readmes/i3readme)"
-  echo -e "\n"
-  read -p "Enter r to Return to menu: " choice8 
+  instcinn () {
+  clear
+  pacstrap /mnt $CINNPKGLST
+  sleep 2
 
-  case $choice8 in
-    r|R ) inst_desk ;;
-    * ) invalid ;;
-  esac
-done	
-	
-}
-#
-#
-#instcinn () {
-# clear
-# pacstrap /mnt $CINNPKGLST
-# sleep 2
-# arch-chroot /mnt systemctl enable lightdm.service
-# clear
-# echo -e "\n"
-# echo "Cinnamon desktop installed..."
-# sleep 2
-# clear
-#}
+# setup lightdm service
+  arch-chroot /mnt systemctl enable lightdm.service
+
+# the following dconf settings should turn on screen reader in cinnamon for the user however it is not working:
+  echo -e "Using sudo to set dconf settings as user"
+  echo -e "\n"
+  echo "enabling reader in dconf:"
+  echo -e "\n"
+  arch-chroot /mnt sudo -u ${USRNAME} dbus-launch --exit-with-session gsettings set org.gnome.desktop.a11y.applications screen-reader-enabled true  
+
+# copy greeter file - this is so we can enable orca later and turn off autologin   
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+
+#  arch-chroot /mnt systemctl enable gdm.service
+
+# set session name and run autologin function  
+  SESSIONID="cinnamon"
+  autologinldm
+  echo -e "\n"
+  sleep 1
+
+# add user to sudo if selected
+  addsudo 
+  echo -e "\n"
+  sleep 1
+  
+  #espeakup enable 
+  arch-chroot /mnt systemctl enable espeakup.service
+
+  echo -e "\n"
+  echo "Cinnamon desktop installed..."
+  sleep 2
+  clear
+ }
 #
 #
 instgnome () {
@@ -873,6 +894,7 @@ do
   echo "  4) Networking"
   echo "  5) Fonts"
   echo "  6) Printing support"
+  echo "  7) Virtual Box Support"  
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
@@ -884,13 +906,113 @@ do
     4 ) instnet ;;
     5 ) instfonts ;;
     6 ) instprint ;;
+    7 ) virtbox ;;    
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
 done
 }
+
+#
+# Package Notes Menu
+#
+notes_menu () { while true
+do
+  clear
+  echo "--------------------------------"
+  echo "       Package Notes Menu"
+  echo "     Readme and Package List"
+  echo "      These Notes Use less"
+  echo "     Hit Spacebar to Scroll"
+  echo "      Hit Q to Quit View"
+  echo "   Hit R to Return to This Menu"
+  echo "--------------------------------"
+  echo ""
+  echo "  1) i3 Notes"
+  echo "  2) Mate Notes"
+  echo "  3) Gnome Notes"
+  echo "  4) Cinnamon Notes"    
+# echo "  3) XFCE"
+  echo ""
+  echo "  R) Return to Desktop Install Menu"
+  echo -e "\n"
+  read -p "Please enter your choice: " choice8
+  case $choice8 in
+    1 ) i3readme ;;
+    2 ) matereadme ;;
+    3 ) gnomereadme ;;
+    4 ) cinnreadme ;;                
+#    5 ) xfcereadme ;;
+  r|R ) inst_desk ;;
+    * ) invalid ;;
+  esac
+done
+}
+
+#
+# Package Notes 
+#
+i3readme () { while true
+  do
+  echo "$(</skel/readmes/i3readme)"
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " choice9 
+
+  case $choice9 in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+done	
+	
+}
 #
 #
+matereadme () { while true
+  do
+  echo "$(</skel/readmes/matereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " choice10 
+
+  case $choice10 in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+done	
+	
+}
+#
+#
+gnomereadme () { while true
+  do
+  echo "$(</skel/readmes/gnomereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " choice11 
+
+  case $choice11 in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+done	
+	
+}
+#
+#
+cinnreadme () { while true
+  do
+  echo "$(</skel/readmes/cinnreadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " choice12 
+
+  case $choice12 in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+done	
+	
+}
+#
+#
+
 inst_desk () { while true
 do
   clear
@@ -902,11 +1024,9 @@ do
   echo ""
   echo "  1) i3"
   echo "  2) Mate"
+  echo "  3) Gnome"
+  echo "  4) Cinnamon"    
 # echo "  3) XFCE"
-# echo "  4) Mate"
-# echo "  5) Cinnamon"
-# echo "  6) Gnome"
-  echo "  N) notes on i3"
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
@@ -914,12 +1034,10 @@ do
   case $choice7 in
     1 ) insti3 ;;
     2 ) instmate ;;
+    3 ) instgnome ;;
+    4 ) instcinn ;;                
 #    3 ) instxfce ;;
-#    4 ) instmate ;;
-#    5 ) instcinn ;;
-#    6 ) instgnome ;;
-	n|N ) i3readme ;;
-    r|R ) main_menu ;;
+  r|R ) main_menu ;;
     * ) invalid ;;
   esac
 done

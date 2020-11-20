@@ -1,4 +1,5 @@
-This is the readme for i3.
+i3 is installed with speach enabled by default.
+In addition we enable autologin to prevent screen reader accesibility issues.
 The following are the packages we are installing:
 
 i3
