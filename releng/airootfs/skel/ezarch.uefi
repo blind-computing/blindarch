@@ -782,8 +782,8 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice2
-  case $choice2 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) usrname ;;
     2 ) usrpwd ;;
     3 ) mkusersudo;;
@@ -792,6 +792,7 @@ do
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -812,8 +813,8 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice3
-  case $choice3 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) trgtdrvsd ;;
     2 ) swapsize ;;
     3 ) rootsize ;;
@@ -823,6 +824,7 @@ do
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -843,8 +845,8 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice4
-  case $choice4 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) trgtdrvnv ;;
     2 ) swapsize ;;
     3 ) rootsize ;;
@@ -854,6 +856,7 @@ do
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -870,15 +873,18 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice5
-  case $choice5 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) sata_drv ;;
     2 ) nvme_drv ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
+#
+#
 #
 #
 inst_soft () { while true
@@ -898,121 +904,23 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice6
-  case $choice6 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) instxorg ;;
     2 ) instgen ;;
     3 ) instmedia ;;
     4 ) instnet ;;
     5 ) instfonts ;;
     6 ) instprint ;;
-    7 ) virtbox ;;    
+    7 ) virtbox ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
-
-#
-# Package Notes Menu
-#
-notes_menu () { while true
-do
-  clear
-  echo "--------------------------------"
-  echo "       Package Notes Menu"
-  echo "     Readme and Package List"
-  echo "      These Notes Use less"
-  echo "     Hit Spacebar to Scroll"
-  echo "      Hit Q to Quit View"
-  echo "   Hit R to Return to This Menu"
-  echo "--------------------------------"
-  echo ""
-  echo "  1) i3 Notes"
-  echo "  2) Mate Notes"
-  echo "  3) Gnome Notes"
-  echo "  4) Cinnamon Notes"    
-# echo "  3) XFCE"
-  echo ""
-  echo "  R) Return to Desktop Install Menu"
-  echo -e "\n"
-  read -p "Please enter your choice: " choice8
-  case $choice8 in
-    1 ) i3readme ;;
-    2 ) matereadme ;;
-    3 ) gnomereadme ;;
-    4 ) cinnreadme ;;                
-#    5 ) xfcereadme ;;
-  r|R ) inst_desk ;;
-    * ) invalid ;;
-  esac
-done
-}
-
-#
-# Package Notes 
-#
-i3readme () { while true
-  do
-  echo "$(</skel/readmes/i3readme)"
-  echo -e "\n"
-  read -p "R) Return to Notes Menu: " choice9 
-
-  case $choice9 in
-    r|R ) notes_menu ;;
-    * ) invalid ;;
-  esac
-done	
-	
-}
 #
 #
-matereadme () { while true
-  do
-  echo "$(</skel/readmes/matereadme)" | less
-  echo -e "\n"
-  read -p "R) Return to Notes Menu: " choice10 
-
-  case $choice10 in
-    r|R ) notes_menu ;;
-    * ) invalid ;;
-  esac
-done	
-	
-}
-#
-#
-gnomereadme () { while true
-  do
-  echo "$(</skel/readmes/gnomereadme)" | less
-  echo -e "\n"
-  read -p "R) Return to Notes Menu: " choice11 
-
-  case $choice11 in
-    r|R ) notes_menu ;;
-    * ) invalid ;;
-  esac
-done	
-	
-}
-#
-#
-cinnreadme () { while true
-  do
-  echo "$(</skel/readmes/cinnreadme)" | less
-  echo -e "\n"
-  read -p "R) Return to Notes Menu: " choice12 
-
-  case $choice12 in
-    r|R ) notes_menu ;;
-    * ) invalid ;;
-  esac
-done	
-	
-}
-#
-#
-
 inst_desk () { while true
 do
   clear
@@ -1028,19 +936,246 @@ do
   echo "  4) Cinnamon"    
 # echo "  3) XFCE"
   echo ""
+  echo "  N) Notes for Environments Menu"
+  echo "  P) Package List Menu"
+  echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice7
-  case $choice7 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) insti3 ;;
     2 ) instmate ;;
     3 ) instgnome ;;
     4 ) instcinn ;;                
 #    3 ) instxfce ;;
+	n|N ) notes_menu ;;
+  p|P ) pkg_menu ;;
   r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
+}
+#
+#
+
+#
+# Package Notes Menu
+#
+notes_menu () { while true
+do
+  clear
+  echo "--------------------------------"
+  echo "       Desktop Notes Menu"
+  echo "    Readme and Install Notes"
+  echo "    These Notes Pipe to less"
+  echo "     Hit Spacebar to Scroll"
+  echo "       Hit Q to Quit View"
+  echo "  Hit R to Return to This Menu"
+  echo "--------------------------------"
+  echo ""
+  echo "  1) i3 Notes"
+  echo "  2) Mate Notes"
+  echo "  3) Gnome Notes"
+  echo "  4) Cinnamon Notes"    
+# echo "  3) XFCE"
+  echo ""
+  echo "  R) Return to Desktop Install Menu"
+  echo -e "\n"
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
+    1 ) i3readme ;;
+    2 ) matereadme ;;
+    3 ) gnomereadme ;;
+    4 ) cinnreadme ;;                
+#    5 ) xfcereadme ;;
+  r|R ) inst_desk ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done
+}
+
+#
+# i3 Notes 
+#
+i3readme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/i3readme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Mate Notes 
+#
+matereadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/matereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Gnome Notes 
+#
+gnomereadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/gnomereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Cinnamon Notes 
+#
+cinnreadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/cinnreadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+#
+
+pkg_menu () { while true
+do
+  clear
+  echo "--------------------------------"
+  echo "       Package List Menu"
+  echo "     This list pipes to less"
+  echo "     Hit Spacebar to Scroll"
+  echo "      Hit Q to Quit View"
+  echo "   Hit R to Return to This Menu"
+  echo "--------------------------------"
+  echo ""
+  echo "  1) i3 Packages"
+  echo "  2) Mate Packages"
+  echo "  3) Gnome Packages"
+  echo "  4) Cinnamon Packages"    
+# echo "  3) XFCE"
+  echo ""
+  echo "  R) Return to Desktop Install Menu"
+  echo -e "\n"
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
+    1 ) i3pkg ;;
+    2 ) matepkg ;;
+    3 ) gnomepkg ;;
+    4 ) cinnpkg ;;                
+#    5 ) xfcepkg ;;
+  r|R ) inst_desk ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done
+}
+
+
+#
+# i3 Pkg List 
+#
+i3pkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/i3.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Mate Pkg List 
+#
+matepkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/mate.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Gnome Pkg List 
+#
+gnomepkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/gnome.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Cinnamon Pkg Notes 
+#
+cinnpkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/cinn.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
 }
 #
 #
@@ -1048,7 +1183,7 @@ main_menu () { while true
 do
   clear
   echo "-------------------------------------"
-  echo " EZ Arch Installer - UEFI Systems"
+  echo " EZ BlindArch Installer Main Menu"
   echo "-------------------------------------"
   echo ""
   echo "  1) Username, Passwords, & Hostname"
@@ -1061,8 +1196,8 @@ do
   echo ""
   echo "  X) Exit"
   echo -e "\n"
-  read -p "Enter your choice: " choice1
-  case $choice1 in
+  read -p "Enter your choice: " userchoice
+  case $userchoice in
     1 ) make_upht ;;
     2 ) chdrvtype ;;
     3 ) psbase ;;
@@ -1073,6 +1208,7 @@ do
     x|X ) exit;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
