@@ -46,14 +46,14 @@ dwnezarchbr () {
 #
 dwnezarchur () {
   clear
-  [[ -f ezarch.uefi ]] && rm ezarch.uefi
-  wget https://sourceforge.net/projects/ezarch/files/Scripts/ezarch.uefi
-  clear
-  echo -e "\n"
-  echo "ezarch.uefi Release Version Downloaded"
-  sleep 2
-  clear
-  chmod +x ezarch.uefi
+  #[[ -f ezarch.uefi ]] && rm ezarch.uefi
+  #wget https://sourceforge.net/projects/ezarch/files/Scripts/ezarch.uefi
+  #clear
+  #echo -e "\n"
+  #echo "ezarch.uefi Release Version Downloaded"
+  #sleep 2
+  #clear
+  #chmod +x ezarch.uefi
   ./ezarch.uefi
 }
 #

@@ -112,6 +112,14 @@ usrpwd () {
 }
 #
 #
+virtbox () {
+  clear
+  echo -e "adding virtual box support"
+  pacstrap /mnt virtualbox-guest-utils virtualbox-guest-dkms
+
+}
+#
+#
 mkusersudo () {
   clear
   echo -e "\n"
@@ -569,19 +577,47 @@ instprint () {
 # sleep 2
 # clear
 #}
+
+instxfce () {
+  clear
+  pacstrap /mnt $XFCEPKGLST
+  sleep 2
+# setup lightdm service
+  arch-chroot /mnt systemctl enable lightdm.service
+# copy greeter file - this is so we can enable orca later and turn off autologin   
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  
+# set session name and run autologin function  
+  SESSIONID="xfce"
+  autologinldm
+  echo -e "\n"
+  sleep 1
+
+# add user to sudo if selected
+  addsudo 
+  echo -e "\n"
+  sleep 1
 #
-#
-#instxfce () {
-# clear
-# pacstrap /mnt $XFCEPKGLST
-# sleep 2
-# arch-chroot /mnt systemctl enable lightdm.service
-# clear
-# echo -e "\n"
-# echo "XFCE desktop installed..."
-# sleep 2
-# clear
-#}
+# accessibility support of XFCE needs enabled manually:
+# getting an error here but it still seems to enable, not sure the cause yet
+
+echo "updating xconf-query"
+
+arch-chroot /mnt xfconf-query -c xfce4-session -n -t bool -p /general/StartAssistiveTechnologies -s true
+
+# xfce has a bug in the  /etc/xdg/autostart/orca-autostart.desktop  we need to modify the following line:
+# OnlyShowIn=Gnome;MATE;Unity;Cinnamon;
+
+echo "modifying /etc/xdg/autostart/orca-autostart.desktop to enable xfce"
+
+sed -i "0,/^OnlyShowIn=GNOME;MATE;Unity;Cinnamon;/s//OnlyShowIn=GNOME;MATE;Unity;Cinnamon;xfce;/" /mnt/etc/xdg/autostart/orca-autostart.desktop
+
+  sleep 2
+  echo -e "\n"
+  echo "XFCE desktop installed..."
+  sleep 2
+  clear
+}
 #
 #
 instmate () {
@@ -668,49 +704,92 @@ insti3 () {
   sleep 20
   clear
 }
-#
-#
-i3readme () { while true
-  do
-  echo "$(</skel/readmes/i3readme)"
-  echo -e "\n"
-  read -p "Enter r to Return to menu: " choice8 
 
-  case $choice8 in
-    r|R ) inst_desk ;;
-    * ) invalid ;;
-  esac
-done	
-	
+instcinn () {
+  clear
+  pacstrap /mnt $CINNPKGLST
+  sleep 2
+
+# setup lightdm service
+  arch-chroot /mnt systemctl enable lightdm.service 
+
+  #espeakup enable 
+  arch-chroot /mnt systemctl enable espeakup.service
+
+# the following dconf settings should turn on screen reader in cinnamon for the user however it is not working:
+  echo -e "Using sudo to set dconf settings as user"
+  echo -e "\n"
+  echo "enabling reader in dconf:"
+  echo -e "\n"
+  arch-chroot /mnt sudo -u ${USRNAME} dbus-launch --exit-with-session gsettings set org.gnome.desktop.a11y.applications screen-reader-enabled true  
+
+# copy greeter file - this is so we can enable orca later and turn off autologin   
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+
+#  arch-chroot /mnt systemctl enable gdm.service
+
+# set session name and run autologin function  
+  SESSIONID="cinnamon"
+  autologinldm
+  echo -e "\n"
+  sleep 1
+
+# add user to sudo if selected
+  addsudo 
+  echo -e "\n"
+  sleep 1
+  
+
+
+  echo -e "\n"
+  echo "Cinnamon desktop installed..."
+  sleep 2
+  clear
+ }
+#
+#
+instgnome () {
+  clear
+  pacstrap /mnt $GNOMEPKGLST
+  sleep 2
+
+# setup lightdm service
+  arch-chroot /mnt systemctl enable lightdm.service
+
+# copy greeter file - this is so we can enable orca later and turn off autologin   
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+
+#  arch-chroot /mnt systemctl enable gdm.service
+
+# set session name and run autologin function  
+  SESSIONID="gnome"
+  autologinldm
+  echo -e "\n"
+  sleep 1
+
+# add user to sudo if selected
+  addsudo 
+  echo -e "\n"
+  sleep 1
+
+# the following dconf settings turn on all the accessibility services in mate for the user:
+  echo -e "Using sudo to set dconf settings as user"
+  echo -e "\n"
+
+  echo "enabling reader in dconf:"
+  echo -e "\n"
+  arch-chroot /mnt sudo -u ${USRNAME} dbus-launch --exit-with-session gsettings set org.gnome.desktop.a11y.applications screen-reader-enabled true
+  echo -e "\n"
+  echo "Accessibility services enabled"
+
+
+  echo "Gnome desktop installed..."
+  sleep 2
+  clear
 }
 #
 #
-#instcinn () {
-# clear
-# pacstrap /mnt $CINNPKGLST
-# sleep 2
-# arch-chroot /mnt systemctl enable lightdm.service
-# clear
-# echo -e "\n"
-# echo "Cinnamon desktop installed..."
-# sleep 2
-# clear
-#}
-#
-#
-#instgnome () {
-# clear
-# pacstrap /mnt $GNOMEPKGLST
-# sleep 2
-# arch-chroot /mnt systemctl enable gdm.service
-# clear
-# echo -e "\n"
-# echo "Gnome desktop installed..."
-# sleep 2
-# clear
-#}
-#
-#
+
 invalid () {
   echo -e "\n"
   echo "Invalid answer, Please try again"
@@ -733,8 +812,8 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice2
-  case $choice2 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) usrname ;;
     2 ) usrpwd ;;
     3 ) mkusersudo;;
@@ -743,6 +822,7 @@ do
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -763,8 +843,8 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice3
-  case $choice3 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) trgtdrvsd ;;
     2 ) swapsize ;;
     3 ) rootsize ;;
@@ -774,6 +854,7 @@ do
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -794,8 +875,8 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice4
-  case $choice4 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) trgtdrvnv ;;
     2 ) swapsize ;;
     3 ) rootsize ;;
@@ -805,6 +886,7 @@ do
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -821,13 +903,14 @@ do
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice5
-  case $choice5 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) sata_drv ;;
     2 ) nvme_drv ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -845,20 +928,23 @@ do
   echo "  4) Networking"
   echo "  5) Fonts"
   echo "  6) Printing support"
+  echo "  7) Virtual Box Support"  
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice6
-  case $choice6 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) instxorg ;;
     2 ) instgen ;;
     3 ) instmedia ;;
     4 ) instnet ;;
     5 ) instfonts ;;
     6 ) instprint ;;
+    7 ) virtbox ;;
     r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
@@ -874,27 +960,287 @@ do
   echo ""
   echo "  1) i3"
   echo "  2) Mate"
-# echo "  3) XFCE"
-# echo "  4) Mate"
-# echo "  5) Cinnamon"
-# echo "  6) Gnome"
-  echo "  N) notes on i3"
+  echo "  3) Gnome"
+  echo "  4) Cinnamon"    
+  echo "  5) XFCE"
+  echo ""
+  echo "  N) Notes for Environments Menu"
+  echo "  P) Package List Menu"
   echo ""
   echo "  R) Return to menu"
   echo -e "\n"
-  read -p "Please enter your choice: " choice7
-  case $choice7 in
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
     1 ) insti3 ;;
     2 ) instmate ;;
-#    3 ) instxfce ;;
-#    4 ) instmate ;;
-#    5 ) instcinn ;;
-#    6 ) instgnome ;;
-	n|N ) i3readme ;;
-    r|R ) main_menu ;;
+    3 ) instgnome ;;
+    4 ) instcinn ;;                
+    5 ) instxfce ;;
+	n|N ) notes_menu ;;
+  p|P ) pkg_menu ;;
+  r|R ) main_menu ;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
+}
+#
+#
+
+#
+# Package Notes Menu
+#
+notes_menu () { while true
+do
+  clear
+  echo "--------------------------------"
+  echo "       Desktop Notes Menu"
+  echo "    Readme and Install Notes"
+  echo "    These Notes Pipe to less"
+  echo "     Hit Spacebar to Scroll"
+  echo "       Hit Q to Quit View"
+  echo "  Hit R to Return to This Menu"
+  echo "--------------------------------"
+  echo ""
+  echo "  1) i3 Notes"
+  echo "  2) Mate Notes"
+  echo "  3) Gnome Notes"
+  echo "  4) Cinnamon Notes"    
+  echo "  5) XFCE"
+  echo ""
+  echo "  R) Return to Desktop Install Menu"
+  echo -e "\n"
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
+    1 ) i3readme ;;
+    2 ) matereadme ;;
+    3 ) gnomereadme ;;
+    4 ) cinnreadme ;;                
+    5 ) xfcereadme ;;
+  r|R ) inst_desk ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done
+}
+
+#
+# i3 Notes 
+#
+i3readme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/i3readme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Mate Notes 
+#
+matereadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/matereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Gnome Notes 
+#
+gnomereadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/gnomereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Cinnamon Notes 
+#
+cinnreadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/cinnreadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+
+#
+# XFCE Notes 
+#
+xfcereadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/xfcereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+#
+pkg_menu () { while true
+do
+  clear
+  echo "--------------------------------"
+  echo "       Package List Menu"
+  echo "     This list pipes to less"
+  echo "     Hit Spacebar to Scroll"
+  echo "      Hit Q to Quit View"
+  echo "   Hit R to Return to This Menu"
+  echo "--------------------------------"
+  echo ""
+  echo "  1) i3 Packages"
+  echo "  2) Mate Packages"
+  echo "  3) Gnome Packages"
+  echo "  4) Cinnamon Packages"    
+  echo "  3) XFCE"
+  echo ""
+  echo "  R) Return to Desktop Install Menu"
+  echo -e "\n"
+  read -p "Please enter your choice: " userchoice
+  case $userchoice in
+    1 ) i3pkg ;;
+    2 ) matepkg ;;
+    3 ) gnomepkg ;;
+    4 ) cinnpkg ;;                
+    5 ) xfcepkg ;;
+  r|R ) inst_desk ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done
+}
+
+
+#
+# i3 Pkg List 
+#
+i3pkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/i3.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Mate Pkg List 
+#
+matepkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/mate.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Gnome Pkg List 
+#
+gnomepkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/gnome.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+# Cinnamon Pkg Notes 
+#
+cinnpkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/cinn.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+
+#
+# XFCE Pkg Notes 
+#
+xfcepkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/xfce.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
 }
 #
 #
@@ -902,7 +1248,7 @@ main_menu () { while true
 do
   clear
   echo "-------------------------------------"
-  echo " EZ Arch Installer - UEFI Systems"
+  echo " EZ BlindArch Installer Main Menu"
   echo "-------------------------------------"
   echo ""
   echo "  1) Username, Passwords, & Hostname"
@@ -915,8 +1261,8 @@ do
   echo ""
   echo "  X) Exit"
   echo -e "\n"
-  read -p "Enter your choice: " choice1
-  case $choice1 in
+  read -p "Enter your choice: " userchoice
+  case $userchoice in
     1 ) make_upht ;;
     2 ) chdrvtype ;;
     3 ) psbase ;;
@@ -927,6 +1273,7 @@ do
     x|X ) exit;;
     * ) invalid ;;
   esac
+  unset $userchoice
 done
 }
 #
