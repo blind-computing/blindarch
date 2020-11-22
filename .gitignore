@@ -1,0 +1,5 @@
+# Ignore ArchISO work and output directories
+work
+out
+releng/work
+releng/out
