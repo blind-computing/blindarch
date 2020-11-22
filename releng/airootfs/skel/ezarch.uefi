@@ -577,19 +577,47 @@ instprint () {
 # sleep 2
 # clear
 #}
+
+instxfce () {
+  clear
+  pacstrap /mnt $XFCEPKGLST
+  sleep 2
+# setup lightdm service
+  arch-chroot /mnt systemctl enable lightdm.service
+# copy greeter file - this is so we can enable orca later and turn off autologin   
+  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  
+# set session name and run autologin function  
+  SESSIONID="xfce"
+  autologinldm
+  echo -e "\n"
+  sleep 1
+
+# add user to sudo if selected
+  addsudo 
+  echo -e "\n"
+  sleep 1
 #
-#
-#instxfce () {
-# clear
-# pacstrap /mnt $XFCEPKGLST
-# sleep 2
-# arch-chroot /mnt systemctl enable lightdm.service
-# clear
-# echo -e "\n"
-# echo "XFCE desktop installed..."
-# sleep 2
-# clear
-#}
+# accessibility support of XFCE needs enabled manually:
+# getting an error here but it still seems to enable, not sure the cause yet
+
+echo "updating xconf-query"
+
+arch-chroot /mnt xfconf-query -c xfce4-session -n -t bool -p /general/StartAssistiveTechnologies -s true
+
+# xfce has a bug in the  /etc/xdg/autostart/orca-autostart.desktop  we need to modify the following line:
+# OnlyShowIn=Gnome;MATE;Unity;Cinnamon;
+
+echo "modifying /etc/xdg/autostart/orca-autostart.desktop to enable xfce"
+
+sed -i "0,/^OnlyShowIn=GNOME;MATE;Unity;Cinnamon;/s//OnlyShowIn=GNOME;MATE;Unity;Cinnamon;xfce;/" /mnt/etc/xdg/autostart/orca-autostart.desktop
+
+  sleep 2
+  echo -e "\n"
+  echo "XFCE desktop installed..."
+  sleep 2
+  clear
+}
 #
 #
 instmate () {
@@ -676,15 +704,17 @@ insti3 () {
   sleep 20
   clear
 }
-#
-#
-  instcinn () {
+
+instcinn () {
   clear
   pacstrap /mnt $CINNPKGLST
   sleep 2
 
 # setup lightdm service
-  arch-chroot /mnt systemctl enable lightdm.service
+  arch-chroot /mnt systemctl enable lightdm.service 
+
+  #espeakup enable 
+  arch-chroot /mnt systemctl enable espeakup.service
 
 # the following dconf settings should turn on screen reader in cinnamon for the user however it is not working:
   echo -e "Using sudo to set dconf settings as user"
@@ -709,8 +739,7 @@ insti3 () {
   echo -e "\n"
   sleep 1
   
-  #espeakup enable 
-  arch-chroot /mnt systemctl enable espeakup.service
+
 
   echo -e "\n"
   echo "Cinnamon desktop installed..."
@@ -725,7 +754,7 @@ instgnome () {
   sleep 2
 
 # setup lightdm service
-  arch-chroot /mnt systemctl enable lightdm.service 
+  arch-chroot /mnt systemctl enable lightdm.service
 
 # copy greeter file - this is so we can enable orca later and turn off autologin   
   cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
@@ -760,6 +789,7 @@ instgnome () {
 }
 #
 #
+
 invalid () {
   echo -e "\n"
   echo "Invalid answer, Please try again"
@@ -885,8 +915,6 @@ done
 }
 #
 #
-#
-#
 inst_soft () { while true
 do
   clear
@@ -934,7 +962,7 @@ do
   echo "  2) Mate"
   echo "  3) Gnome"
   echo "  4) Cinnamon"    
-# echo "  3) XFCE"
+  echo "  5) XFCE"
   echo ""
   echo "  N) Notes for Environments Menu"
   echo "  P) Package List Menu"
@@ -947,7 +975,7 @@ do
     2 ) instmate ;;
     3 ) instgnome ;;
     4 ) instcinn ;;                
-#    3 ) instxfce ;;
+    5 ) instxfce ;;
 	n|N ) notes_menu ;;
   p|P ) pkg_menu ;;
   r|R ) main_menu ;;
@@ -978,7 +1006,7 @@ do
   echo "  2) Mate Notes"
   echo "  3) Gnome Notes"
   echo "  4) Cinnamon Notes"    
-# echo "  3) XFCE"
+  echo "  5) XFCE"
   echo ""
   echo "  R) Return to Desktop Install Menu"
   echo -e "\n"
@@ -988,7 +1016,7 @@ do
     2 ) matereadme ;;
     3 ) gnomereadme ;;
     4 ) cinnreadme ;;                
-#    5 ) xfcereadme ;;
+    5 ) xfcereadme ;;
   r|R ) inst_desk ;;
     * ) invalid ;;
   esac
@@ -1068,9 +1096,27 @@ cinnreadme () { while true
 done	
 	
 }
-#
-#
 
+#
+# XFCE Notes 
+#
+xfcereadme () { while true
+  do
+  clear
+  echo "$(</skel/readmes/xfcereadme)" | less
+  echo -e "\n"
+  read -p "R) Return to Notes Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) notes_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+#
+#
 pkg_menu () { while true
 do
   clear
@@ -1086,7 +1132,7 @@ do
   echo "  2) Mate Packages"
   echo "  3) Gnome Packages"
   echo "  4) Cinnamon Packages"    
-# echo "  3) XFCE"
+  echo "  3) XFCE"
   echo ""
   echo "  R) Return to Desktop Install Menu"
   echo -e "\n"
@@ -1096,7 +1142,7 @@ do
     2 ) matepkg ;;
     3 ) gnomepkg ;;
     4 ) cinnpkg ;;                
-#    5 ) xfcepkg ;;
+    5 ) xfcepkg ;;
   r|R ) inst_desk ;;
     * ) invalid ;;
   esac
@@ -1166,6 +1212,25 @@ cinnpkg () { while true
   do
   clear
   echo "$(</skel/package_configs/cinn.pkglst)" | less
+  echo -e "\n"
+  read -p "R) Return to Package Menu: " userchoice 
+
+  case $userchoice in
+    r|R ) pkg_menu ;;
+    * ) invalid ;;
+  esac
+  unset $userchoice
+done	
+	
+}
+
+#
+# XFCE Pkg Notes 
+#
+xfcepkg () { while true
+  do
+  clear
+  echo "$(</skel/package_configs/xfce.pkglst)" | less
   echo -e "\n"
   read -p "R) Return to Package Menu: " userchoice 
 

@@ -1,14 +1,20 @@
 # TEST BRANCH FOR BlindArch
 
 # WARNING
-# This version is under development.  DO NOT USE THIS unless you are working with us on testing. USE OF THIS VERSION MAY RESULT IN DATA LOSS
+# This version is under development.  
+# DO NOT USE THIS unless you are working with us on testing. USE OF THIS VERSION MAY RESULT IN DATA LOSS
 
 ## This test branch adds an experimental install script based on the EZARCH scripting system by Eznix.
-## This version is heavily customized to assist blind users in a quick and basic install.
+## This version is heavily customized to assist blind users for a quick and basic install.
 For information on EZARCH, please visit the [main page on Sourceforge](https://sourceforge.net/projects/ezarch/)
 
 BlindArch is a project based on [Talking Arch](http://talkingarch.info) to create an ArchLinux install CD for blind and visually impaired users. It also offers an easy to use installer to allow users to set up a completely accessible and customisable arch linux installation.
-You can download the latest testing image from the [Blind Computing download page](https://onlinemarketspecialist.com/blindarch/BlindArch-2020.11.21-x86_64.iso).
+
+NOTE:  The partitioner built into the script WILL WIPE THE DRIVE YOU SELECT.  You have been warned.
+
+You may choose to forego the parititioning and run the installer scripts manually.  Simply partition as you would normally in Arch, mount your drives, then run the ezarch.bios or ezarch.uefi script to install either with legacy or eufi support respectively.
+
+You can download the latest testing image from the [Blind Computing download page](https://onlinemarketspecialist.com/blindarch/BlindArch-2020.11.22-x86_64.iso).
 
 NOTE: The listed address is a temporary placeholder until the ISO can be sent up to the BC server.
 
@@ -41,11 +47,26 @@ It's as easy as that!
 
 ## Miscellaneous Notes
 
-Currently i3 is the only DE we have made modifications to in order to for accessibility on boot.
-
 Most of the modifications made to the blindarch iso are confined to the airootfs subdirectory.
 A couple of packages were also added to the package list to add support for virtual box.
 Some other modifications include larger text for those with low vision and the default being set to the espeak by default.
+
+### DEs installed:
+
+We currently have i3, GNOME, MATE, Cinnamon and XFCE installs enabled.
+We are running Lightdm for all installs with autologin enabled.
+This is due to a bug where Lightdm is not launching the screen reader at this time.
+
+### Cinnamon Warning:
+
+Cinnamon currently has a bug which prevents enabling the screenreader out of the box, you will need to enable it manually.
+
+This can be accomplished with the following command pasted into a terminal:
+
+dconf gsettings set org.gnome.desktop.a11y.applications screen-reader-enabled true
+
+Alternatively, this can be enabled through the menu under accessiblity.
+
 
 ## Thanks
 
