@@ -7,10 +7,5 @@ https://help.gnome.org/users/orca/stable/howto_the_orca_modifier.html.en
 
 Some Keybind Information:
 
-Orca has a special modifier key that works like SHIFT plus CONTROL plus ALT
-
-Which key the "Orca Modifier" is bound to will, by default, depend on whether you are using Orca's Laptop keyboard layout or its Desktop keyboard layout:
-
-    If you are using the Laptop layout, the default Orca Modifier will be CapsLock
-    
-    If you are using the Desktop layout, the Orca Modifier will be both Insert and KP_Insert also the same as KP_0
+The screen reader application can be enabled or disabled with the keybind:
+ALT + SUPER + S
