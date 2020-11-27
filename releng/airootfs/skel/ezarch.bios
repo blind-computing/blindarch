@@ -534,7 +534,7 @@ instprint () {
   clear
   pacstrap /mnt $PRINTPKGLST
   sleep 2
-  arch-chroot /mnt systemctl enable org.cups.cupsd.service
+  arch-chroot /mnt systemctl enable cups.service
   clear
   echo -e "\n"
   echo "Printing packages installed..."
@@ -651,7 +651,7 @@ instmate () {
   echo "Accessibility services enabled"
   echo -e "\n"
   echo "Mate desktop installation complete"
-  sleep 20
+  sleep 4
   clear
 }
 #
@@ -1244,7 +1244,7 @@ do
   echo "  1) Username, Passwords, & Hostname"
   echo "  2) Choose Device Type & Partition Drive"
   echo "  3) Install Base System (pacstrap)"
-  echo "  4) Configure System Settings"
+  echo "  4) Set fstab hostname users time and locale"
   echo "  5) Install Broad Categories of Software"
   echo "  6) Choose Desktop"
   echo "  7) Install GRUB"
