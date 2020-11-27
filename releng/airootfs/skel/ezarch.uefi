@@ -544,7 +544,7 @@ instprint () {
   clear
   pacstrap /mnt $PRINTPKGLST
   sleep 2
-  arch-chroot /mnt systemctl enable org.cups.cupsd.service
+  arch-chroot /mnt systemctl enable cups.service
   clear
   echo -e "\n"
   echo "Printing packages installed..."
