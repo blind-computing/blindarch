@@ -160,9 +160,10 @@ addsudo () {
 autologinldm () { 
 
 # these sed commands update the lightdm.conf with the proper values to autologin  
-  sed -i "0,/^#autologin-user=/s//autologin-user=${USRNAME}/" /skel/lightdmfiles/lightdm.conf
-  sed -i "s/^#autologin-session=*/autologin-session=${SESSIONID}/" /skel/lightdmfiles/lightdm.conf
-  cp /skel/lightdmfiles/lightdm.conf /mnt/etc/lightdm
+
+  sed -i "0,/^#autologin-user=/s//autologin-user=${USRNAME}/" /mnt/etc/lightdm/lightdm.conf
+  sed -i "s/^#autologin-session=*/autologin-session=${SESSIONID}/" /mnt/etc/lightdm/lightdm.conf
+
 # create autologin group and add user to it for lightdm.conf
   arch-chroot /mnt groupadd -r autologin
   arch-chroot /mnt gpasswd -a "$USRNAME" autologin  
