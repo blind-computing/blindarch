@@ -9,9 +9,9 @@ NOTE:  The partitioner built into the script WILL WIPE THE DRIVE YOU SELECT.  Yo
 
 You may choose to forego the parititioning and run the installer scripts manually.  Simply partition as you would normally in Arch, mount your drives, then run the ezarch.bios or ezarch.uefi script to install either with legacy or eufi support respectively.
 
-You can download the latest testing image from the [Blind Computing download page](https://onlinemarketspecialist.com/blindarch/BlindArch-2020.11.28-x86_64.iso).
+You can download the latest testing image from the [Blind Computing download page](https://downloads.blindcomputing.org/blindarch/BlindArch-2020.11.28-x86_64.iso).
 
-NOTE: The listed address is a temporary placeholder until the ISO can be sent up to the BC server. In addition; the printing service name for cups has changed since prior versions, if printing doesn't work and you are using an older install, use 'systemctl enable cups.service' to enable printing.
+NOTE:  The printing service name for cups has changed since prior versions, if printing doesn't work and you are using an older install, use 'systemctl enable cups.service' to enable printing.
 
 If you just want a CD image, you can stop reading here!
 The rest of this document is only useful for those who want to build their own images.
