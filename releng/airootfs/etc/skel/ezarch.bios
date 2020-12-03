@@ -12,20 +12,20 @@
 #
 # 
 
-I3PKGLST=$(</skel/package_configs/i3.pkglst)
-PSBASEPKGLST=$(</skel/package_configs/psbase.pkglst)
-XORGPKGLST=$(</skel/package_configs/xorg.pkglst)
-GENPKGLST=$(</skel/package_configs/gen.pkglst)
-MEDIAPKGLST=$(</skel/package_configs/media.pkglst)
-NETWORKPKGLST=$(</skel/package_configs/network.pkglst)
-FONTSPKGLST=$(</skel/package_configs/fonts.pkglst)
-PRINTPKGLST=$(</skel/package_configs/print.pkglst)
-LXQTPKGLST=$(</skel/package_configs/lxqt.pkglst)
-KDEPKGLST=$(</skel/package_configs/kde.pkglst)
-XFCEPKGLST=$(</skel/package_configs/xfce.pkglst)
-MATEPKGLST=$(</skel/package_configs/mate.pkglst)
-CINNPKGLST=$(</skel/package_configs/cinn.pkglst)
-GNOMEPKGLST=$(</skel/package_configs/gnome.pkglst)
+I3PKGLST=$(</etc/skel/package_configs/i3.pkglst)
+PSBASEPKGLST=$(</etc/skel/package_configs/psbase.pkglst)
+XORGPKGLST=$(</etc/skel/package_configs/xorg.pkglst)
+GENPKGLST=$(</etc/skel/package_configs/gen.pkglst)
+MEDIAPKGLST=$(</etc/skel/package_configs/media.pkglst)
+NETWORKPKGLST=$(</etc/skel/package_configs/network.pkglst)
+FONTSPKGLST=$(</etc/skel/package_configs/fonts.pkglst)
+PRINTPKGLST=$(</etc/skel/package_configs/print.pkglst)
+LXQTPKGLST=$(</etc/skel/package_configs/lxqt.pkglst)
+KDEPKGLST=$(</etc/skel/package_configs/kde.pkglst)
+XFCEPKGLST=$(</etc/skel/package_configs/xfce.pkglst)
+MATEPKGLST=$(</etc/skel/package_configs/mate.pkglst)
+CINNPKGLST=$(</etc/skel/package_configs/cinn.pkglst)
+GNOMEPKGLST=$(</etc/skel/package_configs/gnome.pkglst)
 
 # ---------------------------------------
 # Define Functions:
@@ -576,7 +576,7 @@ instxfce () {
 # setup lightdm service
   arch-chroot /mnt systemctl enable lightdm.service
 # copy greeter file - this is so we can enable orca later and turn off autologin   
-  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  cp /etc/skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
   
 # set session name and run autologin function  
   SESSIONID="xfce"
@@ -620,7 +620,7 @@ instmate () {
   arch-chroot /mnt systemctl enable lightdm.service
 
 # copy greeter file - this is so we can enable orca later and turn off autologin   
-  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  cp /etc/skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
   
 # set session name and run autologin function  
   SESSIONID="mate"
@@ -669,11 +669,11 @@ insti3 () {
   echo "pushing custom config files for i3"
   arch-chroot /mnt mkdir /home/"$USRNAME"/.config
   arch-chroot /mnt mkdir /home/"$USRNAME"/.config/i3 
-  cp /skel/i3/config /mnt/home/"$USRNAME"/.config/i3
-  cp /skel/i3/i3-sensible-terminal /mnt/usr/bin
-  cp -r /skel/speech-dispatcher /mnt/home/"$USRNAME"/.config
+  cp /etc/skel/i3/config /mnt/home/"$USRNAME"/.config/i3
+  cp /etc/skel/i3/i3-sensible-terminal /mnt/usr/bin
+  cp -r /etc/skel/speech-dispatcher /mnt/home/"$USRNAME"/.config
   arch-chroot /mnt chown -R "$USRNAME" /home/"$USRNAME"/.config
-  cp /skel/vol /mnt/usr/bin
+  cp /etc/skel/vol /mnt/usr/bin
 # enable auto logon in lightdm.conf
 
 # set session name and run autologin function  
@@ -688,7 +688,7 @@ insti3 () {
   sleep 1
 
 # copy greeter file - this is so we can enable orca later and turn off autologin  
-  cp /skel/lightdmfiles/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  cp /etc/skel/lightdmfiles/lightdm-gtk-greeter.conf /mnt/etc/lightdm
   arch-chroot /mnt systemctl enable espeakup.service
   echo -e "\n"  
   echo "i3 installation complete"
@@ -715,7 +715,7 @@ instcinn () {
   arch-chroot /mnt sudo -u ${USRNAME} dbus-launch --exit-with-session gsettings set org.gnome.desktop.a11y.applications screen-reader-enabled true  
 
 # copy greeter file - this is so we can enable orca later and turn off autologin   
-  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  cp /etc/skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
 
 #  arch-chroot /mnt systemctl enable gdm.service
 
@@ -748,7 +748,7 @@ instgnome () {
   arch-chroot /mnt systemctl enable lightdm.service
 
 # copy greeter file - this is so we can enable orca later and turn off autologin   
-  cp /skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
+  cp /etc/skel/lightdm-gtk-greeter.conf /mnt/etc/lightdm
 
 #  arch-chroot /mnt systemctl enable gdm.service
 
@@ -1021,7 +1021,7 @@ done
 i3readme () { while true
   do
   clear
-  echo "$(</skel/readmes/i3readme)" | less
+  echo "$(</etc/skel/readmes/i3readme)" | less
   echo -e "\n"
   read -p "R) Return to Notes Menu: " userchoice 
 
@@ -1039,7 +1039,7 @@ done
 matereadme () { while true
   do
   clear
-  echo "$(</skel/readmes/matereadme)" | less
+  echo "$(</etc/skel/readmes/matereadme)" | less
   echo -e "\n"
   read -p "R) Return to Notes Menu: " userchoice 
 
@@ -1057,7 +1057,7 @@ done
 gnomereadme () { while true
   do
   clear
-  echo "$(</skel/readmes/gnomereadme)" | less
+  echo "$(</etc/skel/readmes/gnomereadme)" | less
   echo -e "\n"
   read -p "R) Return to Notes Menu: " userchoice 
 
@@ -1075,7 +1075,7 @@ done
 cinnreadme () { while true
   do
   clear
-  echo "$(</skel/readmes/cinnreadme)" | less
+  echo "$(</etc/skel/readmes/cinnreadme)" | less
   echo -e "\n"
   read -p "R) Return to Notes Menu: " userchoice 
 
@@ -1094,7 +1094,7 @@ done
 xfcereadme () { while true
   do
   clear
-  echo "$(</skel/readmes/xfcereadme)" | less
+  echo "$(</etc/skel/readmes/xfcereadme)" | less
   echo -e "\n"
   read -p "R) Return to Notes Menu: " userchoice 
 
@@ -1148,7 +1148,7 @@ done
 i3pkg () { while true
   do
   clear
-  echo "$(</skel/package_configs/i3.pkglst)" | less
+  echo "$(</etc/skel/package_configs/i3.pkglst)" | less
   echo -e "\n"
   read -p "R) Return to Package Menu: " userchoice 
 
@@ -1166,7 +1166,7 @@ done
 matepkg () { while true
   do
   clear
-  echo "$(</skel/package_configs/mate.pkglst)" | less
+  echo "$(</etc/skel/package_configs/mate.pkglst)" | less
   echo -e "\n"
   read -p "R) Return to Package Menu: " userchoice 
 
@@ -1184,7 +1184,7 @@ done
 gnomepkg () { while true
   do
   clear
-  echo "$(</skel/package_configs/gnome.pkglst)" | less
+  echo "$(</etc/skel/package_configs/gnome.pkglst)" | less
   echo -e "\n"
   read -p "R) Return to Package Menu: " userchoice 
 
@@ -1202,7 +1202,7 @@ done
 cinnpkg () { while true
   do
   clear
-  echo "$(</skel/package_configs/cinn.pkglst)" | less
+  echo "$(</etc/skel/package_configs/cinn.pkglst)" | less
   echo -e "\n"
   read -p "R) Return to Package Menu: " userchoice 
 
@@ -1221,7 +1221,7 @@ done
 xfcepkg () { while true
   do
   clear
-  echo "$(</skel/package_configs/xfce.pkglst)" | less
+  echo "$(</etc/skel/package_configs/xfce.pkglst)" | less
   echo -e "\n"
   read -p "R) Return to Package Menu: " userchoice 
 

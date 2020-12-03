@@ -2,7 +2,7 @@
 After=systemd-udev-settle.service
 
 [Service]
-ExecStart=/skel/copyfiles.sh
+ExecStart=/usr/local/bin/copyfiles.sh
 
 [Install]
 WantedBy=multi-user.target

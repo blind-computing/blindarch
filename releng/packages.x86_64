@@ -6,8 +6,9 @@
 virtualbox-guest-utils
 virtualbox-guest-dkms
 
-
-# defaults
+# dialog menus
+dialog
+ncurses
 
 alsa-utils
 amd-ucode
@@ -34,8 +35,10 @@ espeakup
 ethtool
 exfatprogs
 f2fs-tools
+fatresize
 fsarchiver
 gnu-netcat
+gpart
 gpm
 gptfdisk
 grml-zsh-config
@@ -97,6 +100,7 @@ tcpdump
 terminus-font
 termite-terminfo
 testdisk
+tmux
 udftools
 usb_modeswitch
 usbutils
