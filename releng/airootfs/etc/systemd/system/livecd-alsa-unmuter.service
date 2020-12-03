@@ -12,6 +12,5 @@ ConditionKernelCommandLine=accessibility=on
 Type=oneshot
 ExecStart=/usr/local/bin/livecd-sound -u
 
-
 [Install]
 WantedBy=sound.target
