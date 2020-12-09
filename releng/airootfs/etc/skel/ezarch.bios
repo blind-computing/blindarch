@@ -692,7 +692,7 @@ insti3 () {
   arch-chroot /mnt systemctl enable espeakup.service
   echo -e "\n"  
   echo "i3 installation complete"
-  sleep 20
+  sleep 5
   clear
 }
 
