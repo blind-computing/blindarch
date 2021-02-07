@@ -217,25 +217,29 @@ hstname () {
 swapsize () {
   clear
   echo -e "\n"
-  read -p "Pick Swap Partition Size (2G, 4G, or 8G): " SWPSIZE
-    case $SWPSIZE in
-    2|2G|2g)
-    SWPSIZE=2GiB
-    ;;
-    4|4G|4g)
-    SWPSIZE=4GiB
-    ;;
-    8|8G|8g)
-    SWPSIZE=8Gib
-    ;;
-    *)
-    echo "Invalid input..."
-    sleep 2
-    unset SWPSIZE
-    swapsize
-    ;;
-    esac
-  clear
+  read -p "Pick Swap Partition Size in Gigabytes (ex. 2, 4, 8): " SWPSIZETEMP
+  gib="GiB"
+  SWPSIZE="$SWPSIZETEMP$gib"
+# old case system 
+#    case $SWPSIZE in
+#    2|2G|2g)
+#    SWPSIZE=2GiB
+#    ;;
+#    4|4G|4g)
+#    SWPSIZE=4GiB
+#    ;;
+#    8|8G|8g)
+#    SWPSIZE=8Gib
+#    ;;
+#    *)
+#    echo "Invalid input..."
+#    sleep 2
+#    unset SWPSIZE
+#    swapsize
+#    ;;
+#    esac
+#  clear
+
   echo -e "\n"
   echo "SWAP Partition Set To "${SWPSIZE}""
   sleep 2
@@ -246,25 +250,28 @@ swapsize () {
 rootsize () {
   clear
   echo -e "\n"
-  read -p "Pick Root Partition Size (20G, 40G, or 60G): " RTSIZE
-    case $RTSIZE in
-    20|20G|20g)
-    RTSIZE=20GiB
-    ;;
-    40|40G|40g)
-    RTSIZE=40GiB
-    ;;
-    60|60G|60g)
-    RTSIZE=60GiB
-    ;;
-    *)
-    echo "Invalid input..."
-    sleep 2
-    unset RTSIZE
-    rootsize
-    ;;
-    esac
-  clear
+  read -p "Pick Root Partition Size in Gigabytes (ex. 20, 40, 80): " RTSIZETEMP
+  gib="GiB"
+  RTSIZE="$RTSIZETEMP$gib"
+#   case $RTSIZE in
+#   20|20G|20g)
+#   RTSIZE=20GiB
+#   ;;
+#   40|40G|40g)
+#   RTSIZE=40GiB
+#   ;;
+#   60|60G|60g)
+#   RTSIZE=60GiB
+#   ;;
+#   *)
+#   echo "Invalid input..."
+#   sleep 2
+#   unset RTSIZE
+#   rootsize
+#   ;;
+#   esac
+#  clear
+
   echo -e "\n"
   echo "Root Partition Set To "${RTSIZE}""
   sleep 2
